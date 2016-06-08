@@ -116,7 +116,13 @@ end
 -- @function [parent=#BaseApp] createScene
 function BaseApp:createScene(sceneName, args)
     if sceneName ~= self.currSceneName then
-        local packageName = string.format("%s.%s.view.%sScene", self.scenesRoot, sceneName, sceneName)
+        local packageName = ""
+        if string.find(sceneName, "%.") ~= nil then
+            packageName = string.format("%s.%sScene", self.scenesRoot, sceneName)
+        else
+            packageName = string.format("%s.%s.view.%sScene", self.scenesRoot, sceneName, sceneName)
+        end
+        log:info("packageName %s", packageName)
         local status, scene = xpcall(
             function()
                 return require(packageName)

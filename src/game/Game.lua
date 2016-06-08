@@ -23,7 +23,7 @@ end
 -- 启动游戏
 -- @function [parent=#Game] startup
 function Game:startup()
-    self:changeScene("Main")
+    self:changeScene("TestLua")
 end
 
 return Game

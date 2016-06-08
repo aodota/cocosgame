@@ -52,7 +52,7 @@ end
 
 function TestLuaScene:openTest(name)
     log:info("test %s", name)
-    self:getApp():changeScene("TestLua.tests." .. name .. "Test")
+    self:getApp():changeScene("TestLua.tests." .. name .. "Test", {}, "random", 1)
     -- display.replaceScene(require("tests." .. name .. "Test").new(), "random", 1)
 end
 

@@ -254,8 +254,7 @@ function display.wrapScene(scene, transition, time, more)
         local t = display.SCENE_TRANSITIONS[key]
         time = time or 0.2
         more = more or t[2]
-        if type(t) == "table" then
-            log:info("---------key %s %s %s %s %s", scene, key, more, t[1], t[2])
+        if #t > 0 then
             scene = t[1]:create(time, scene, more)
         else
             scene = t:create(time, scene)

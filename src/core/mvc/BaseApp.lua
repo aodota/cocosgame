@@ -122,7 +122,6 @@ function BaseApp:createScene(sceneName, args)
         else
             packageName = string.format("%s.%s.view.%sScene", self.scenesRoot, sceneName, sceneName)
         end
-        log:info("packageName %s", packageName)
         local status, scene = xpcall(
             function()
                 return require(packageName)

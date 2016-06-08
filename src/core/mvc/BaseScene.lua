@@ -91,7 +91,6 @@ function BaseScence:showWithScene(transition, time, more)
     self:setVisible(true)
     local scene = display.newScene(self.name, self.args)
     scene:addChild(self)
-    log:info("showWithScene %s %s %s %s", scene, transition, time, more)
     display.runScene(scene, transition, time, more)
     
     return self

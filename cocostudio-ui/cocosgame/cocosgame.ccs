@@ -51,12 +51,11 @@
           </Folder>
         </Folder>
         <Project Name="ButtonTestScene.csd" Type="Scene" />
-        <Image Name="HelloWorld.png" />
+        <Project Name="LoadingPanel.csd" Type="Layer" />
         <Project Name="LoadingScene.csd" Type="Scene" />
         <Project Name="MainScene.csd" Type="Scene" />
         <Project Name="SliderTestScene.csd" Type="Scene" />
         <Project Name="TestLuaScene.csd" Type="Scene" />
-        <Project Name="LoadingPanel.csd" Type="Layer" />
       </RootFolder>
     </Group>
   </SolutionFolder>

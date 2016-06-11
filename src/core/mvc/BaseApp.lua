@@ -60,7 +60,7 @@ end
 -- @param object more 更多参数
 -- @function [parent=#BaseApp] changeScene
 function BaseApp:changeScene(sceneName, args, transition, time, more)
-    local scene = self:createScene(sceneName, args)
+    local scene = self:createScene(sceneName, args, transition, time, more)
     if scene then
         self.lastScene = self.currScene
         self.lastSceneName = self.currSceneName
@@ -84,7 +84,7 @@ end
 -- @param object more 更多参数
 -- @function [parent=#BaseApp] changeScene
 function BaseApp:pushScene(sceneName, args, transition, time, more)
-    local scene = self:createScene(sceneName, args)
+    local scene = self:createScene(sceneName, args, transition, time, more)
     if scene then
         self.lastScene = self.currScene
         self.lastSceneName = self.currSceneName
@@ -114,7 +114,7 @@ end
 -- @param string sceneName 场景名称
 -- @param table args 参数
 -- @function [parent=#BaseApp] createScene
-function BaseApp:createScene(sceneName, args)
+function BaseApp:createScene(sceneName, args, transition, time, more)
     if sceneName ~= self.currSceneName then
         local packageName = ""
         if string.find(sceneName, "%.") ~= nil then
@@ -134,8 +134,18 @@ function BaseApp:createScene(sceneName, args)
         )
         local t = type(scene)
         if status and (t == "table" or t == "userdata") then
-            return scene:create(self, name, checktable(args))
+            if scene.NeedLoading and self.currSceneName ~= "Loading" then
+                -- 需要Loading
+                local _args = {scene, sceneName, args, transition, time, more}
+                self:changeScene("Loading", _args)
+                return nil
+            else
+                -- 无需Loading
+                return scene:create(self, sceneName, checktable(args))
+            end
         end
+        
+        return nil
     else
         log:error("已经在当前场景 %s", self.currScene)
     end

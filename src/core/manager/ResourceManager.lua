@@ -27,56 +27,61 @@ function ResourceManager:ctor()
 end
 
 --------------------------------
--- 获取组
--- @param string group 组名
--- @param string file 文件名
--- @function [parent=#ResourceManager] addToGroup
-function ResourceManager:addToGroup(file, group)
-    local resGroup = self:_getGroup(group)
-    if not resGroup[file] then
-        table.insert(resGroup, file)
-    end
+-- 加载打包资源
+-- @param string plist plist文件
+-- @param string group 资源组
+-- @function [parent=#ResourceManager] addAnimation
+function ResourceManager:addAnimation(name, animation)
+    log:info("add animation %s", name)
+    self.animationCache:addAnimation(animation, name)
 end
+
 
 --------------------------------
--- 判断文件是否已经在组中
--- @param string group 组名
--- @param string file 文件名
--- @function [parent=#ResourceManager] isInGroup
-function ResourceManager:isInGroup(file, group)
-    local resGroup = self:_getGroup(group)
-
-    return resGroup[file] ~= nil
+-- 移除指定纹理
+-- @function [parent=#ResourceManager] removeAnimation
+function ResourceManager:removeAnimation(name)
+    log:info("remove animation %s", name)
+    return self.animationCache:removeAnimation(name)
 end
 
+
+--------------------------------
+-- 加载动画
+-- @param string fileName 文件名
+-- @param string group 动画组
+-- @function [parent=#ResourceManager] loadArmature
+function ResourceManager:loadArmature(fileName, group)
+    log:info("load armature %s", fileName)
+    if group then
+        self.animGroups[group] = self.animGroups[group] or {}
+        table.insert(self.animGroups[group], fileName)
+    end
+    self.armatureManager:addArmatureFileInfo(fileName)
+end
 
 --------------------------------
 -- 异步加载动画
 -- @param string fileName 文件名
 -- @param function callback 加载完成之后回调函数
 -- @param string group 动画组
--- @function [parent=#ResourceManager] loadAnimationAsync
-function ResourceManager:loadAnimationAsync(fileName, callback, group)
+-- @function [parent=#ResourceManager] loadArmatureAsync
+function ResourceManager:loadArmatureAsync(fileName, callback, group)
+    log:info("load armature %s async", fileName)
     if group then
         self.animGroups[group] = self.animGroups[group] or {}
         table.insert(self.animGroups[group], fileName)
     end
     self.armatureManager:addArmatureFileInfoAsync(fileName, callback)
-    log:info("load armature %s async", fileName)
 end
 
 --------------------------------
--- 加载动画
--- @param string fileName 文件名
+-- 卸载动画资源
 -- @param string group 动画组
--- @function [parent=#ResourceManager] loadAnimation
-function ResourceManager:loadAnimation(fileName, group)
-    if group then
-        self.animGroups[group] = self.animGroups[group] or {}
-        table.insert(self.animGroups[group], fileName)
-    end
-    self.armatureManager:addArmatureFileInfo(fileName)
-    log:info("load armature %s", fileName)
+-- @function [parent=#ResourceManager] removeArmature
+function ResourceManager:removeArmature(fileName)
+    log:info("remove armature %s", file)
+    self.armatureManager:removeArmatureFileInfo(file)    
 end
 
 --------------------------------
@@ -90,29 +95,26 @@ function ResourceManager:removeArmatureByGroup(group)
         for _, file in pairs(resGroup) do
             self:removeArmature(file)
         end
-        self.animGroups[group]= {}
+        self.animGroups[group]= nil
     end
 end
 
 --------------------------------
--- 卸载动画资源
--- @param string group 动画组
--- @function [parent=#ResourceManager] removeArmature
-function ResourceManager:removeArmature(fileName)
-    self.armatureManager:removeArmatureFileInfo(file)
-    log:info("remove armature %s", file)
+-- 加载打包资源
+-- @param string plist plist文件
+-- @param string group 资源组
+-- @function [parent=#ResourceManager] loadTexture
+function ResourceManager:loadTexture(filepath)
+    log:info("load texture %s", filepath)
+    self.textureCache:addImage(filepath)
 end
 
 --------------------------------
--- 获取SpriteFrame
--- @param string frameName frameName
--- @function [parent=#ResourceManager] getSpriteFrame
-function ResourceManager:getSpriteFrame(frameName)
-    local frame = self.spriteFrameCache:getSpriteFram(frameName)
-    if not frame or tolua.isnull(frame) then
-        log:warn("can't get spriteFrame, frameName: %s", frameName)
-    end
-    return frame
+-- 移除指定纹理
+-- @function [parent=#ResourceManager] removeTexture
+function ResourceManager:removeTexture(filepath)
+    log:info("remove texture %s", filepath)
+    return self.textureCache:removeTextureForKey(filepath)
 end
 
 --------------------------------
@@ -129,7 +131,6 @@ function ResourceManager:loadSpriteFrames(plist, group)
         self:addToGroup(plist, group)
     end
 end
-
 
 --------------------------------
 -- 卸载打包资源
@@ -153,7 +154,6 @@ function ResourceManager:removeSpriteFrames(plist)
     return false
 end
 
-
 --------------------------------
 -- 按组卸载打包资源
 -- @param string plist plist文件
@@ -168,16 +168,20 @@ function ResourceManager:removeSpriteFramesByGroup(group)
 
     -- 清空资源组
     if self.groups[group] then
-        self.groups[group] = {}
+        self.groups[group] = nil
     end
 end
 
 --------------------------------
--- 判断指定文件是否存在
--- @param string filepath 文件路径
--- @function [parent=#ResourceManager] isExist
-function ResourceManager:isExist(filepath)
-    return fileUtils:isFileExist(filepath)
+-- 获取SpriteFrame
+-- @param string frameName frameName
+-- @function [parent=#ResourceManager] getSpriteFrame
+function ResourceManager:getSpriteFrame(frameName)
+    local frame = self.spriteFrameCache:getSpriteFram(frameName)
+    if not frame or tolua.isnull(frame) then
+        log:warn("can't get spriteFrame, frameName: %s", frameName)
+    end
+    return frame
 end
 
 --------------------------------
@@ -191,14 +195,39 @@ end
 -- 移除未使用的纹理
 -- @function [parent=#ResourceManager] removeUnusedTextures
 function ResourceManager:removeUnusedTextures()
+    log:info("removeUnusedTextures")
     return self.textureCache:removeUnusedTextures()
 end
 
 --------------------------------
--- 移除指定纹理
--- @function [parent=#ResourceManager] removeTexture
-function ResourceManager:removeTexture(filepath)
-    return self.textureCache:removeTextureForKey(filepath)
+-- 判断指定文件是否存在
+-- @param string filepath 文件路径
+-- @function [parent=#ResourceManager] isExist
+function ResourceManager:isExist(filepath)
+    return fileUtils:isFileExist(filepath)
+end
+
+--------------------------------
+-- 获取组
+-- @param string group 组名
+-- @param string file 文件名
+-- @function [parent=#ResourceManager] addToGroup
+function ResourceManager:addToGroup(file, group)
+    local resGroup = self:_getGroup(group)
+    if not resGroup[file] then
+        table.insert(resGroup, file)
+    end
+end
+
+--------------------------------
+-- 判断文件是否已经在组中
+-- @param string group 组名
+-- @param string file 文件名
+-- @function [parent=#ResourceManager] isInGroup
+function ResourceManager:isInGroup(file, group)
+    local resGroup = self:_getGroup(group)
+
+    return resGroup[file] ~= nil
 end
 
 --------------------------------

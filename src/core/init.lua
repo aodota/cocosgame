@@ -22,6 +22,13 @@ cc.exports.ResourceGroup = {
 cc.exports.layers = require "core.Layers"
 cc.exports.log = (require "core.log").new()
 
+-- 重新定义traceback
+__G__TRACKBACK__ = function(msg)
+    local msg = debug.traceback(msg, 2)
+    log:error(msg)
+    return msg
+end
+
 -- quick framework
 -- LOAD_SHORTCODES_API = false
 -- require("core.framework.init")
@@ -31,15 +38,13 @@ cc.exports.utils = require("core.util.init")
 cc.exports.json = require("core.json")
 require("core.component.init")
 
+
 -- net
 cc.exports.scheduler = require("core.scheduler")
 cc.exports.net = require("core.net.init")
 
 
 -- game init
-cc.exports.BaseScene = require "core.mvc.BaseScene"
-cc.exports.BaseApp = require "core.mvc.BaseApp"
-cc.exports.BaseView = require "core.mvc.BaseView"
 cc.exports.rmgr = require "core.manager.ResourceManager".new()
 cc.exports.cmgr = require "core.manager.ConnectManager".new(true)
 

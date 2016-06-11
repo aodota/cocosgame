@@ -6,23 +6,30 @@
 -- To change this template use File | Settings | File Templates.
 -- Game 游戏App
 
+-- mvc导入
+cc.exports.BaseScene = require "core.mvc.BaseScene"
+cc.exports.BaseApp = require "core.mvc.BaseApp"
+cc.exports.BasePanel = require "core.mvc.BasePanel"
+
 local Game = class("MyApp", BaseApp)
 
 --------------------------------
 -- 创建方法
 -- @function [parent=#Game] onCreate
 function Game:onCreate()
-    log:info("Game Created")
-    local paths = cc.FileUtils:getInstance():getSearchPaths()
-    for _, path in pairs(paths) do
-        log:info("search path %s", path)
-    end
 end
 
 --------------------------------
 -- 启动游戏
 -- @function [parent=#Game] startup
 function Game:startup()
+    -- 游戏core初始化
+    require "core.init"
+
+    -- app暴露给全局
+    cc.exports.app = self
+    
+    -- 切换到入口函数
     self:changeScene("TestLua")
 end
 

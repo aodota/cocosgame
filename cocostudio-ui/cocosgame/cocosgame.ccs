@@ -3,9 +3,60 @@
   <SolutionFolder>
     <Group ctype="ResourceGroup">
       <RootFolder Name=".">
+        <Folder Name="res">
+          <PlistImageFolder Image="pack.png" PListFile="pack.plist" Name=".pack_PList.Dir">
+            <PlistImageFile Name="BugAnt.png" Key="BugAnt.png" />
+            <PlistImageFile Name="BugSpider.png" Key="BugSpider.png" />
+            <PlistImageFile Name="ExitButton.png" Key="ExitButton.png" />
+            <PlistImageFile Name="MainSceneBg.jpg" Key="MainSceneBg.jpg" />
+            <PlistImageFile Name="PlayButton.png" Key="PlayButton.png" />
+            <PlistImageFile Name="PlaySceneBg.jpg" Key="PlaySceneBg.jpg" />
+            <PlistImageFile Name="Star.png" Key="Star.png" />
+          </PlistImageFolder>
+          <Image Name="BugAnt.png" />
+          <Audio Name="BugDead.wav" />
+          <Audio Name="BugEnterHole.wav" />
+          <Image Name="BugSpider.png" />
+          <Image Name="ExitButton.png" />
+          <Image Name="HelloWorld.png" />
+          <Image Name="PlaySceneBg.jpg" />
+          <Image Name="RadioButtonOff.png" />
+          <Image Name="RadioButtonOffDisabled.png" />
+          <Image Name="RadioButtonOffPressed.png" />
+          <Image Name="RadioButtonOn.png" />
+          <Image Name="RadioButtonOnDisabled.png" />
+          <Image Name="RadioButtonOnPressed.png" />
+          <Image Name="SliderBar.png" />
+          <Image Name="SliderButton.png" />
+          <Image Name="Star.png" />
+        </Folder>
+        <Folder Name="ui">
+          <Folder Name="button">
+            <Image Name="choose.png" />
+            <Image Name="choose_bg.png" />
+            <Image Name="green_btn.png" />
+          </Folder>
+          <Folder Name="loading">
+            <Image Name="bg.png" />
+            <Image Name="load_bg.png" />
+            <Image Name="load_pregress2.png" />
+            <Image Name="load_progress1.png" />
+            <Image Name="load_txt.png" />
+          </Folder>
+          <Folder Name="slider">
+            <Image Name="slider.png" />
+            <Image Name="slider_1.png" />
+            <Image Name="slider_2.png" />
+            <Image Name="slider_bg.png" />
+          </Folder>
+        </Folder>
+        <Project Name="ButtonTestScene.csd" Type="Scene" />
         <Image Name="HelloWorld.png" />
+        <Project Name="LoadingScene.csd" Type="Scene" />
         <Project Name="MainScene.csd" Type="Scene" />
+        <Project Name="SliderTestScene.csd" Type="Scene" />
         <Project Name="TestLuaScene.csd" Type="Scene" />
+        <Project Name="LoadingPanel.csd" Type="Layer" />
       </RootFolder>
     </Group>
   </SolutionFolder>

@@ -4,6 +4,11 @@ bin
 build
 toolkit.*
 gradle
+.vs
+.vscode
+cocosgame.sln
+cocosgame.luaproj
+cocosgame.config
 frameworks/cocos2d-x
 frameworks/runtime-src/proj.win32/.vs
 frameworks/runtime-src/proj.win32/Debug.win32
@@ -19,3 +24,5 @@ src/packages
 cocostudio-ui/cocosgame/frameworks
 cocostudio-ui/cocosgame/res
 cocostudio-ui/cocosgame/src
+cocostudio-ui/**/*.udf
+cocostudio-ui/res

@@ -6,7 +6,6 @@ cc.FileUtils:getInstance():addSearchPath("/../../res/")
 
 require "config"
 require "cocos.init"
-require "core.init"
 
 local function main()
     local game = require("game.Game").new("game")

@@ -10,9 +10,9 @@ local TestLuaScene = class("TestLuaScene", BaseScene)
 
 
 function TestLuaScene:onCreate()
-    log:info("onCreate")
     local items = {
         "helper",
+        "ui",
         "native",
         "display",
         "crypto",
@@ -30,7 +30,6 @@ function TestLuaScene:onCreate()
     self.layout = require("layout.TestLuaLayout").create()
     self:createMenu(items, handler(self, self.openTest))
     self:addObject(self.layout["root"], "ui")
-    self.bListViewMove = false
 end
 
 function TestLuaScene:createMenu( items, callback )
@@ -51,8 +50,10 @@ function TestLuaScene:createMenu( items, callback )
 end
 
 function TestLuaScene:openTest(name)
-    log:info("test %s", name)
-    self:getApp():changeScene("TestLua.tests." .. name .. "Test", {}, "random", 1)
+    local panelName = "TestLua.tests." .. name .. "Test"
+    local args = {panel = panelName}
+    log:info("test %s %s", panelName, args)
+    self:getApp():changeScene("TestLua.tests.Test", {panelName}, "random", 1)
     -- display.replaceScene(require("tests." .. name .. "Test").new(), "random", 1)
 end
 

@@ -1,6 +1,6 @@
 
 -- GameView is a combination of view and controller
-local GameView = class("GameView", BaseView)
+local GameView = class("GameView", BasePanel)
 
 local BugBase   = import("..model.BugBase")
 local BugAnt    = import("..model.BugAnt")

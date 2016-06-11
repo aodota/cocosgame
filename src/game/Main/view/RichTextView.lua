@@ -5,7 +5,7 @@
 -- Time: 10:43
 -- To change this template use File | Settings | File Templates.
 -- RichTextView
-local RichTextView = class("RichTextView", BaseView)
+local RichTextView = class("RichTextView", BasePanel)
 local RichLabel = require("core.component.RichLabel")
 
 --------------------------------

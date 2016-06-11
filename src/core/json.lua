@@ -32,9 +32,19 @@ JSON 编码与解码
 ]]
 local json = {}
 
--- cjson is global value
+local cjson
+local function safeLoad()
+    cjson = require("cjson")
+end
+
+if not pcall(safeLoad) then 
+    cjson = nil
+else
+    log:info("cjson enable")
+end
 
 -- start --
+
 --------------------------------
 -- 将表格数据编码为 JSON 字符串
 -- @function [parent=#json] encode
@@ -77,7 +87,6 @@ echo(str) -- [null,null,2,null,3]
 
 function json.encode(var)
     local status, result = pcall(cjson.encode, var)
-    
     if status then return result end
     if DEBUG > 1 then
         printError("json.encode() - encoding failed: %s", tostring(result))

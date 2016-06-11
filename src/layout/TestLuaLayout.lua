@@ -33,9 +33,9 @@ function Result.create(callBackProvider)
 local result={}
 setmetatable(result, luaExtend)
 
---Create Layer
-local Layer=cc.Node:create()
-Layer:setName("Layer")
+--Create Scene
+local Scene=cc.Node:create()
+Scene:setName("Scene")
 
 --Create menu_list
 local menu_list = ccui.ListView:create()
@@ -60,7 +60,7 @@ layout:setLeftMargin(284.0350)
 layout:setRightMargin(275.9650)
 layout:setTopMargin(82.6309)
 layout:setBottomMargin(117.3691)
-Layer:addChild(menu_list)
+Scene:addChild(menu_list)
 
 --Create menu_btn
 local menu_btn = ccui.Button:create()
@@ -80,6 +80,9 @@ menu_btn:setCascadeColorEnabled(true)
 menu_btn:setCascadeOpacityEnabled(true)
 menu_btn:setPosition(96.1106, 404.5170)
 menu_btn:setColor({r = 0, g = 128, b = 0})
+if callBackProvider~=nil then
+      menu_btn:addClickEventListener(callBackProvider("TestLuaScene.lua", menu_btn, "onClick"))
+end
 layout = ccui.LayoutComponent:bindLayoutComponent(menu_btn)
 layout:setPositionPercentX(0.1001)
 layout:setPositionPercentY(0.6321)
@@ -90,7 +93,7 @@ layout:setLeftMargin(-3.8894)
 layout:setRightMargin(763.8894)
 layout:setTopMargin(215.4830)
 layout:setBottomMargin(384.5170)
-Layer:addChild(menu_btn)
+Scene:addChild(menu_btn)
 
 --Create Animation
 result['animation'] = ccs.ActionTimeline:create()
@@ -99,7 +102,7 @@ result['animation']:setDuration(0)
 result['animation']:setTimeSpeed(1.0000)
 --Create Animation List
 
-result['root'] = Layer
+result['root'] = Scene
 return result;
 end
 

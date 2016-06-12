@@ -35,7 +35,7 @@ end
 
 -- util init
 cc.exports.utils = require("core.util.init")
-cc.exports.json = require("core.json")
+cc.exports.json = require("core.util.json")
 require("core.component.init")
 
 

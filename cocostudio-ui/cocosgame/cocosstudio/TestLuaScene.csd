@@ -34,7 +34,7 @@
             <OutlineColor A="255" R="255" G="0" B="0" />
             <ShadowColor A="255" R="110" G="110" B="110" />
           </AbstractNodeData>
-          <AbstractNodeData Name="checkbox" ActionTag="756669753" Tag="6" IconVisible="False" LeftMargin="57.0000" RightMargin="879.0000" TopMargin="143.0000" BottomMargin="473.0000" TouchEnable="True" CheckedState="True" ctype="CheckBoxObjectData">
+          <AbstractNodeData Name="checkbox" Visible="False" ActionTag="756669753" Tag="6" IconVisible="False" LeftMargin="57.0000" RightMargin="879.0000" TopMargin="143.0000" BottomMargin="473.0000" TouchEnable="True" CheckedState="True" ctype="CheckBoxObjectData">
             <Size X="24.0000" Y="24.0000" />
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
             <Position X="69.0000" Y="485.0000" />

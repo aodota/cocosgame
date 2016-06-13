@@ -45,7 +45,7 @@ function LoadingScene:onCreate(scene, sceneName, args, transition, time, more)
 
     -- 添加帧事件
     -- self.frameHandler = scheduler.scheduleUpdateGlobal(handler(self, self.onFrames))    
-    scheduler.scheduleByCoroutine(handler(self, self.onFrames))
+    scheduler.scheduleUpdateGlobalByCoroutine(handler(self, self.onFrames))
 end
 
 --------------------------------

@@ -7,9 +7,9 @@
 -- To change this template use File | Settings | File Templates.
 -- TestLuaScene 测试场景
 -- local BaseTestScene = require("game.TestLua.tests.BaseTestScene")
-local helperTestPanel = class("helperTestPanel", BasePanel)
+local fileTestPanel = class("fileTestPanel", BasePanel)
 
-function helperTestPanel:onCreate()
+function fileTestPanel:onCreate()
     local label = cc.Label:createWithSystemFont("正在读取文件...","Arial",12)
     label:setPosition(cc.p(display.cx, display.cy))
     self:addChild(label)
@@ -24,7 +24,7 @@ function helperTestPanel:onCreate()
     end
 end
 
-function helperTestPanel:getFileDataTest()
+function fileTestPanel:getFileDataTest()
 end
 
-return helperTestPanel
+return fileTestPanel

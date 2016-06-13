@@ -65,7 +65,7 @@ end
 
 ---------------------------------
 -- 构建一个协程，执行计划的句柄
-function scheduler.scheduleByCoroutine(listener)
+function scheduler.scheduleUpdateGlobalByCoroutine(listener)
     local co = coroutine.create(listener)
     local coroutineFunc = function(handle)
         local rtn = true
@@ -79,6 +79,25 @@ function scheduler.scheduleByCoroutine(listener)
     local handle = scheduler.scheduleUpdateGlobal(function()
          coroutine.resume(co1)
     end)
+    coroutine.resume(co1, handle)
+end
+
+---------------------------------
+-- 构建一个协程，执行计划的句柄
+function scheduler.scheduleGlobalByCoroutine(listener, interval)
+    local co = coroutine.create(listener)
+    local coroutineFunc = function(handle)
+        local rtn = true
+        while rtn do
+            rtn = coroutine.resume(co)
+            coroutine.yield()
+        end
+        scheduler.unscheduleGlobal(handle)
+    end
+    local co1 = coroutine.create(coroutineFunc)
+    local handle = scheduler.scheduleGlobal(function()
+         coroutine.resume(co1)
+    end, interval)
     coroutine.resume(co1, handle)
 end
 

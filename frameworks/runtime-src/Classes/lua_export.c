@@ -1,5 +1,9 @@
 
 #include "lua_export.h"
+
+#if __cplusplus
+extern "C" {
+#endif
 #include "lpack/lpack.h"
 #include "lua_zlib/lua_zlib.h"
 #include "cjson/lua_cjson.h"
@@ -8,7 +12,6 @@ static luaL_Reg lua_exts[] = {
 	{ "pack", luaopen_pack},
 	{ "zlib", luaopen_zlib},
 	{ "cjson", luaopen_cjson_safe},
-
 	{ NULL, NULL }
 };
 
@@ -25,3 +28,7 @@ void luaopen_lua_exts(lua_State *L)
 	}
 	lua_pop(L, 2);
 }
+
+#if __cplusplus
+} // extern "C"
+#endif

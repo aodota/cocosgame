@@ -57,7 +57,7 @@ static int register_all_packages()
 static int register_constom_lua(lua_State* L)
 {
 	// pack
-	luaopen_lua_exts(L);
+    luaopen_lua_exts(L);
 
 	return 0;
 }

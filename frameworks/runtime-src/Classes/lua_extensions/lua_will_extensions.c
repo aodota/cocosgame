@@ -41,4 +41,3 @@ void luaopen_lua_will_extensions(lua_State *L)
     luaopen_luasocket_scripts(L);
 }
 
-

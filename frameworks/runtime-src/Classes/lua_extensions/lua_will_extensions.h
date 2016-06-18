@@ -15,7 +15,6 @@ extern "C" {
 #include "lauxlib.h"
 
 
-
 /// @cond
 void LUA_EXTENSIONS_DLL luaopen_lua_will_extensions(lua_State *L);
 /// @endcond
@@ -23,7 +22,7 @@ void LUA_EXTENSIONS_DLL luaopen_lua_will_extensions(lua_State *L);
 
 
 #endif /* __LUA_EXTRA_H_ */
-
 #if __cplusplus
 }
 #endif
+

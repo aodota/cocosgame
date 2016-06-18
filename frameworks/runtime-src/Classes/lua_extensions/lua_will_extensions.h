@@ -14,12 +14,14 @@ extern "C" {
 
 #include "lauxlib.h"
 
+#if __cplusplus
+}
+#endif
+
 /// @cond
 void LUA_EXTENSIONS_DLL luaopen_lua_will_extensions(lua_State *L);
 /// @endcond
     
-#if __cplusplus
-}
-#endif
+
 
 #endif /* __LUA_EXTRA_H_ */

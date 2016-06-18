@@ -1,18 +1,20 @@
 
 #include "lua_will_extensions.h"
-
-#if __cplusplus
-extern "C" {
-#endif
-
 #include "lpack/lpack.h"
 #include "lua_zlib/lua_zlib.h"
 #include "cjson/lua_cjson.h"
-    
+ 
+#if __cplusplus
+extern "C" {
+#endif
 // socket 真实路径在这里啊
 #include "external/lua/luasocket/luasocket.h"
 #include "external/lua/luasocket/luasocket_scripts.h"
 #include "external/lua/luasocket/mime.h"
+
+#if __cplusplus
+} // extern "C"
+#endif
 
 static luaL_Reg luax_will_exts[] = {
     {"socket.core", luaopen_socket_core},
@@ -39,6 +41,4 @@ void luaopen_lua_will_extensions(lua_State *L)
     luaopen_luasocket_scripts(L);
 }
 
-#if __cplusplus
-} // extern "C"
-#endif
+

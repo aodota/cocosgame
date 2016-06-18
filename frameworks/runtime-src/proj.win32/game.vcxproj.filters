@@ -10,14 +10,17 @@
     <Filter Include="resource">
       <UniqueIdentifier>{2d1d0979-58cd-4ab6-b91c-13650158f1fa}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\lpack">
-      <UniqueIdentifier>{4f24793b-8daa-493e-a97e-1e45843ffbb5}</UniqueIdentifier>
+    <Filter Include="Classes\lua_extensions">
+      <UniqueIdentifier>{27e3188e-6430-4cc1-af33-67f98db0247d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\zlib">
-      <UniqueIdentifier>{fa4cc494-13e0-43ed-924c-162ac0fe9eea}</UniqueIdentifier>
+    <Filter Include="Classes\lua_extensions\lpack">
+      <UniqueIdentifier>{e0bbd402-73f9-4760-97b1-30af564e6e58}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Classes\cjson">
-      <UniqueIdentifier>{c7052b6b-563b-44a5-971b-ed822030d2c2}</UniqueIdentifier>
+    <Filter Include="Classes\lua_extensions\cjson">
+      <UniqueIdentifier>{6b4fa958-9c0e-424d-a0fa-7829cb10afa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Classes\lua_extensions\lua_zlib">
+      <UniqueIdentifier>{37941ce8-42a3-4603-a11d-60cdb2a6839b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -44,23 +47,23 @@
     <ClInclude Include="..\Classes\ide-support\RuntimeLuaImpl.h">
       <Filter>Classes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\lpack\lpack.h">
-      <Filter>Classes\lpack</Filter>
+    <ClInclude Include="..\Classes\lua_extensions\lua_will_extensions.h">
+      <Filter>Classes\lua_extensions</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\lua_export.h">
-      <Filter>Classes</Filter>
+    <ClInclude Include="..\Classes\lua_extensions\lpack\lpack.h">
+      <Filter>Classes\lua_extensions\lpack</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\lua_zlib\lua_zlib.h">
-      <Filter>Classes\zlib</Filter>
+    <ClInclude Include="..\Classes\lua_extensions\cjson\fpconv.h">
+      <Filter>Classes\lua_extensions\cjson</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\cjson\fpconv.h">
-      <Filter>Classes\cjson</Filter>
+    <ClInclude Include="..\Classes\lua_extensions\cjson\lua_cjson.h">
+      <Filter>Classes\lua_extensions\cjson</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\cjson\strbuf.h">
-      <Filter>Classes\cjson</Filter>
+    <ClInclude Include="..\Classes\lua_extensions\cjson\strbuf.h">
+      <Filter>Classes\lua_extensions\cjson</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\cjson\lua_cjson.h">
-      <Filter>Classes\cjson</Filter>
+    <ClInclude Include="..\Classes\lua_extensions\lua_zlib\lua_zlib.h">
+      <Filter>Classes\lua_extensions\lua_zlib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -80,21 +83,23 @@
     <ClCompile Include="..\Classes\ide-support\RuntimeLuaImpl.cpp">
       <Filter>Classes</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\lpack\lpack.c">
-      <Filter>Classes\lpack</Filter>
+    <ClCompile Include="..\Classes\lua_extensions\lua_will_extensions.c">
+      <Filter>Classes\lua_extensions</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\lua_export.c" />
-    <ClCompile Include="..\Classes\lua_zlib\lua_zlib.c">
-      <Filter>Classes\zlib</Filter>
+    <ClCompile Include="..\Classes\lua_extensions\lpack\lpack.c">
+      <Filter>Classes\lua_extensions\lpack</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\cjson\fpconv.c">
-      <Filter>Classes\cjson</Filter>
+    <ClCompile Include="..\Classes\lua_extensions\cjson\fpconv.c">
+      <Filter>Classes\lua_extensions\cjson</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\cjson\lua_cjson.c">
-      <Filter>Classes\cjson</Filter>
+    <ClCompile Include="..\Classes\lua_extensions\cjson\lua_cjson.c">
+      <Filter>Classes\lua_extensions\cjson</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\cjson\strbuf.c">
-      <Filter>Classes\cjson</Filter>
+    <ClCompile Include="..\Classes\lua_extensions\cjson\strbuf.c">
+      <Filter>Classes\lua_extensions\cjson</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\lua_extensions\lua_zlib\lua_zlib.c">
+      <Filter>Classes\lua_extensions\lua_zlib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

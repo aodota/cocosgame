@@ -9,12 +9,14 @@ gradle
 cocosgame.sln
 cocosgame.luaproj
 cocosgame.config
+game.log
 frameworks/cocos2d-x
 frameworks/runtime-src/proj.win32/.vs
 frameworks/runtime-src/proj.win32/Debug.win32
 frameworks/runtime-src/proj.win32/game.sdf
 frameworks/runtime-src/proj.win32/game.opensdf
 frameworks/runtime-src/proj.win32/game.VC.db
+frameworks/runtime-src/proj.win32/game.VC.*
 frameworks/runtime-src/proj.linux
 simulator/win32/game.pdb
 simulator/win32/game.log

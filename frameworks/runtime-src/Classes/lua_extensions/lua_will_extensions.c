@@ -8,12 +8,11 @@ extern "C" {
 #include "lpack/lpack.h"
 #include "lua_zlib/lua_zlib.h"
 #include "cjson/lua_cjson.h"
-
     
-// socket
-#include "luasocket/luasocket.h"
-#include "luasocket/luasocket_scripts.h"
-#include "luasocket/mime.h"
+// socket 真实路径在这里啊
+#include "external/lua/luasocket/luasocket.h"
+#include "external/lua/luasocket/luasocket_scripts.h"
+#include "external/lua/luasocket/mime.h"
 
 static luaL_Reg luax_will_exts[] = {
     {"socket.core", luaopen_socket_core},

@@ -49,6 +49,18 @@
 		5200BECA1A53D9A500AC45E4 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5200BEC91A53D9A500AC45E4 /* Security.framework */; };
 		521A8E7019F0C3D200D177D7 /* Default-667h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521A8E6E19F0C3D200D177D7 /* Default-667h@2x.png */; };
 		521A8E7119F0C3D200D177D7 /* Default-736h@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 521A8E6F19F0C3D200D177D7 /* Default-736h@3x.png */; };
+		84A186DA1D152ABA0004995F /* lua_will_extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186D81D152ABA0004995F /* lua_will_extensions.c */; };
+		84A186DE1D152AD90004995F /* lua_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186DC1D152AD90004995F /* lua_zlib.c */; };
+		84A186E61D152AFC0004995F /* fpconv.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186E01D152AFC0004995F /* fpconv.c */; };
+		84A186E71D152AFC0004995F /* lua_cjson.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186E21D152AFC0004995F /* lua_cjson.c */; };
+		84A186E81D152AFC0004995F /* strbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186E41D152AFC0004995F /* strbuf.c */; };
+		84A186EC1D152B140004995F /* lpack.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186EA1D152B140004995F /* lpack.c */; };
+		84A186ED1D152B330004995F /* lua_will_extensions.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186D81D152ABA0004995F /* lua_will_extensions.c */; };
+		84A186EE1D152B3C0004995F /* fpconv.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186E01D152AFC0004995F /* fpconv.c */; };
+		84A186EF1D152B3F0004995F /* lua_cjson.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186E21D152AFC0004995F /* lua_cjson.c */; };
+		84A186F01D152B420004995F /* strbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186E41D152AFC0004995F /* strbuf.c */; };
+		84A186F11D152B460004995F /* lpack.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186EA1D152B140004995F /* lpack.c */; };
+		84A186F21D152B4A0004995F /* lua_zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 84A186DC1D152AD90004995F /* lua_zlib.c */; };
 		9FA3AE4E1BE9BCC900FC9645 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9FA3AE4D1BE9BCC900FC9645 /* CFNetwork.framework */; };
 		9FC760431A67791200D1E6E7 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = 9FC760401A67791200D1E6E7 /* lang */; };
 		9FC760451A677A4A00D1E6E7 /* SimpleConfigParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9FC760411A67791200D1E6E7 /* SimpleConfigParser.cpp */; };
@@ -132,6 +144,20 @@
 			remoteGlobalIDString = A07A4C241783777C0073F6A7;
 			remoteInfo = "libcocos2d iOS";
 		};
+		8450704D1D14F79000CE18B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 15A8A4031834BDA200142BE0 /* cocos2d_libs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 507B40FD1C31BDD30067B53E;
+			remoteInfo = "libcocos2d tvOS";
+		};
+		845070501D14F79000CE18B5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C03781AE18BF654500FE4F13 /* cocos2d_lua_bindings.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 507B43531C31FA0C0067B53E;
+			remoteInfo = "libluacocos2d tvOS";
+		};
 		9FEE0E431A5FC95000FEA1B0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9FF504781A5E86D600AFDA55 /* libsimulator.xcodeproj */;
@@ -211,6 +237,18 @@
 		5200BEC91A53D9A500AC45E4 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
 		521A8E6E19F0C3D200D177D7 /* Default-667h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-667h@2x.png"; sourceTree = "<group>"; };
 		521A8E6F19F0C3D200D177D7 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x.png"; sourceTree = "<group>"; };
+		84A186D81D152ABA0004995F /* lua_will_extensions.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lua_will_extensions.c; path = ../Classes/lua_extensions/lua_will_extensions.c; sourceTree = "<group>"; };
+		84A186D91D152ABA0004995F /* lua_will_extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lua_will_extensions.h; path = ../Classes/lua_extensions/lua_will_extensions.h; sourceTree = "<group>"; };
+		84A186DC1D152AD90004995F /* lua_zlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lua_zlib.c; path = ../Classes/lua_extensions/lua_zlib/lua_zlib.c; sourceTree = "<group>"; };
+		84A186DD1D152AD90004995F /* lua_zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lua_zlib.h; path = ../Classes/lua_extensions/lua_zlib/lua_zlib.h; sourceTree = "<group>"; };
+		84A186E01D152AFC0004995F /* fpconv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fpconv.c; path = ../Classes/lua_extensions/cjson/fpconv.c; sourceTree = "<group>"; };
+		84A186E11D152AFC0004995F /* fpconv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fpconv.h; path = ../Classes/lua_extensions/cjson/fpconv.h; sourceTree = "<group>"; };
+		84A186E21D152AFC0004995F /* lua_cjson.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lua_cjson.c; path = ../Classes/lua_extensions/cjson/lua_cjson.c; sourceTree = "<group>"; };
+		84A186E31D152AFC0004995F /* lua_cjson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lua_cjson.h; path = ../Classes/lua_extensions/cjson/lua_cjson.h; sourceTree = "<group>"; };
+		84A186E41D152AFC0004995F /* strbuf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = strbuf.c; path = ../Classes/lua_extensions/cjson/strbuf.c; sourceTree = "<group>"; };
+		84A186E51D152AFC0004995F /* strbuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = strbuf.h; path = ../Classes/lua_extensions/cjson/strbuf.h; sourceTree = "<group>"; };
+		84A186EA1D152B140004995F /* lpack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = lpack.c; path = ../Classes/lpack/lpack.c; sourceTree = "<group>"; };
+		84A186EB1D152B140004995F /* lpack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lpack.h; path = ../Classes/lpack/lpack.h; sourceTree = "<group>"; };
 		9FA3AE4D1BE9BCC900FC9645 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.0.sdk/System/Library/Frameworks/CFNetwork.framework; sourceTree = DEVELOPER_DIR; };
 		9FC7603F1A67791200D1E6E7 /* CodeIDESupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodeIDESupport.h; sourceTree = "<group>"; };
 		9FC760401A67791200D1E6E7 /* lang */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = lang; sourceTree = "<group>"; };
@@ -305,6 +343,7 @@
 			children = (
 				15A8A4171834BDA200142BE0 /* libcocos2d Mac.a */,
 				15A8A4251834BDA200142BE0 /* libcocos2d iOS.a */,
+				8450704E1D14F79000CE18B5 /* libcocos2d tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -366,6 +405,49 @@
 			name = Icons;
 			sourceTree = "<group>";
 		};
+		84A186D71D152A9F0004995F /* lua_extensions */ = {
+			isa = PBXGroup;
+			children = (
+				84A186E91D152B030004995F /* lpack */,
+				84A186DF1D152AE40004995F /* cjson */,
+				84A186DB1D152AC10004995F /* lua_zlib */,
+				84A186D81D152ABA0004995F /* lua_will_extensions.c */,
+				84A186D91D152ABA0004995F /* lua_will_extensions.h */,
+			);
+			name = lua_extensions;
+			sourceTree = "<group>";
+		};
+		84A186DB1D152AC10004995F /* lua_zlib */ = {
+			isa = PBXGroup;
+			children = (
+				84A186DC1D152AD90004995F /* lua_zlib.c */,
+				84A186DD1D152AD90004995F /* lua_zlib.h */,
+			);
+			name = lua_zlib;
+			sourceTree = "<group>";
+		};
+		84A186DF1D152AE40004995F /* cjson */ = {
+			isa = PBXGroup;
+			children = (
+				84A186E01D152AFC0004995F /* fpconv.c */,
+				84A186E11D152AFC0004995F /* fpconv.h */,
+				84A186E21D152AFC0004995F /* lua_cjson.c */,
+				84A186E31D152AFC0004995F /* lua_cjson.h */,
+				84A186E41D152AFC0004995F /* strbuf.c */,
+				84A186E51D152AFC0004995F /* strbuf.h */,
+			);
+			name = cjson;
+			sourceTree = "<group>";
+		};
+		84A186E91D152B030004995F /* lpack */ = {
+			isa = PBXGroup;
+			children = (
+				84A186EA1D152B140004995F /* lpack.c */,
+				84A186EB1D152B140004995F /* lpack.h */,
+			);
+			name = lpack;
+			sourceTree = "<group>";
+		};
 		9FC7603E1A67791200D1E6E7 /* ide-support */ = {
 			isa = PBXGroup;
 			children = (
@@ -396,6 +478,7 @@
 			children = (
 				15427CC2198F220600DC375D /* libluacocos2d Mac.a */,
 				15427CD2198F220600DC375D /* libluacocos2d iOS.a */,
+				845070511D14F79000CE18B5 /* libluacocos2d tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -457,6 +540,7 @@
 		F293BB7C15EB830F00256477 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				84A186D71D152A9F0004995F /* lua_extensions */,
 				9FC7603E1A67791200D1E6E7 /* ide-support */,
 				15427CE2198F237300DC375D /* lua_module_register.h */,
 				F293BB7E15EB831F00256477 /* AppDelegate.cpp */,
@@ -592,6 +676,20 @@
 			remoteRef = 15A8A4241834BDA200142BE0 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		8450704E1D14F79000CE18B5 /* libcocos2d tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libcocos2d tvOS.a";
+			remoteRef = 8450704D1D14F79000CE18B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		845070511D14F79000CE18B5 /* libluacocos2d tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libluacocos2d tvOS.a";
+			remoteRef = 845070501D14F79000CE18B5 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		9FF5047E1A5E86D600AFDA55 /* libsimulator Mac.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -677,9 +775,15 @@
 				C07828FA18B4D72E00BD2287 /* SimulatorApp.mm in Sources */,
 				9FFE00A01ACCF59E00D6E35A /* lua_debugger.c in Sources */,
 				5023813317EBBCE400990C9B /* AppDelegate.cpp in Sources */,
+				84A186F01D152B420004995F /* strbuf.c in Sources */,
+				84A186F11D152B460004995F /* lpack.c in Sources */,
 				9FF504851A5E87B100AFDA55 /* ConsoleWindowController.m in Sources */,
+				84A186EF1D152B3F0004995F /* lua_cjson.c in Sources */,
 				C07828F818B4D72E00BD2287 /* main.m in Sources */,
+				84A186EE1D152B3C0004995F /* fpconv.c in Sources */,
+				84A186F21D152B4A0004995F /* lua_zlib.c in Sources */,
 				9FFE00A21ACCF59E00D6E35A /* RuntimeLuaImpl.cpp in Sources */,
+				84A186ED1D152B330004995F /* lua_will_extensions.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -688,12 +792,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				9FC760451A677A4A00D1E6E7 /* SimpleConfigParser.cpp in Sources */,
+				84A186E71D152AFC0004995F /* lua_cjson.c in Sources */,
+				84A186EC1D152B140004995F /* lpack.c in Sources */,
 				5023812517EBBCAC00990C9B /* RootViewController.mm in Sources */,
 				F293BB9C15EB831F00256477 /* AppDelegate.cpp in Sources */,
+				84A186DE1D152AD90004995F /* lua_zlib.c in Sources */,
 				9FFE009F1ACCF59E00D6E35A /* lua_debugger.c in Sources */,
 				5023812417EBBCAC00990C9B /* main.m in Sources */,
 				9FFE00A11ACCF59E00D6E35A /* RuntimeLuaImpl.cpp in Sources */,
+				84A186DA1D152ABA0004995F /* lua_will_extensions.c in Sources */,
 				5023811817EBBCAC00990C9B /* AppController.mm in Sources */,
+				84A186E61D152AFC0004995F /* fpconv.c in Sources */,
+				84A186E81D152AFC0004995F /* strbuf.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -873,6 +983,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				ENABLE_BITCODE = NO;
@@ -911,6 +1022,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COMPRESS_PNG_FILES = NO;
 				ENABLE_BITCODE = NO;
@@ -925,6 +1037,7 @@
 				INFOPLIST_FILE = ios/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = "";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(_COCOS_LIB_IOS_BEGIN)",
 					"$(_COCOS_LIB_IOS_END)",

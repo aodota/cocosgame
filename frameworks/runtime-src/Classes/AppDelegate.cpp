@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "scripting/lua-bindings/manual/lua_module_register.h"
 
+
 #if (CC_TARGET_PLATFORM != CC_PLATFORM_LINUX)
 #include "ide-support/CodeIDESupport.h"
 #endif
@@ -13,7 +14,7 @@
 #include "ide-support/RuntimeLuaImpl.h"
 #endif
 
-#include "lua_export.h"
+#include "lua_extensions/lua_will_extensions.h"
 
 using namespace CocosDenshion;
 
@@ -57,7 +58,8 @@ static int register_all_packages()
 static int register_constom_lua(lua_State* L)
 {
 	// pack
-    luaopen_lua_exts(L);
+    //luaopen_lua_exts(L);
+    luaopen_lua_will_extensions(L);
 
 	return 0;
 }

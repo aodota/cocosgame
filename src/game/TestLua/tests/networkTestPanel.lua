@@ -17,6 +17,7 @@ function networkTestPanel:onCreate()
         "httpget",
         "httppost",
         "httphost",
+        "tcp",
     }
     self.layout = require("layout.TestLuaLayout").create()
     self:createMenu(items, handler(self, self.openTest))

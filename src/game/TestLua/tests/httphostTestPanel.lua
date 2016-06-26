@@ -7,9 +7,9 @@
 -- To change this template use File | Settings | File Templates.
 -- TestLuaScene 测试场景
 -- local BaseTestScene = require("game.TestLua.tests.BaseTestScene")
-local httpgetTestPanel = class("httpgetTestPanel", BasePanel)
+local httphostTestPanel = class("httphostTestPanel", BasePanel)
 
-function httpgetTestPanel:onCreate()
+function httphostTestPanel:onCreate()
     local url = "http://211.151.21.33/t/quick-touch/37565"
     self.label = cc.Label:createWithSystemFont("正在发送网络请求:" .. url, "Arial",12)
     self.label:setPosition(cc.p(display.cx, display.cy))
@@ -18,7 +18,7 @@ function httpgetTestPanel:onCreate()
     net.WebUtil.sendRequestWithHost(url, handler(self, self.onResponse), "forum.cocos.com")
 end
 
-function httpgetTestPanel:onResponse(event)
+function httphostTestPanel:onResponse(event)
     if tolua.isnull(self) then
         return
     end
@@ -43,4 +43,4 @@ function httpgetTestPanel:onResponse(event)
     
 end
 
-return httpgetTestPanel
+return httphostTestPanel

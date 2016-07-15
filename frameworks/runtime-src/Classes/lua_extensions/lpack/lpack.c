@@ -262,7 +262,8 @@ int luaopen_pack(lua_State *L)
  lua_register(L,"bpack",l_pack);
  lua_register(L,"bunpack",l_unpack);
 #else
- luaL_openlib(L, LUA_STRLIBNAME, R, 0);
+ //luaL_openlib(L, LUA_STRLIBNAME, R, 0);
+ luaL_register(L, "pack", R);
  //lua_register(L, "bpack", l_pack);
  //lua_register(L, "bunpack", l_unpack);
 #endif

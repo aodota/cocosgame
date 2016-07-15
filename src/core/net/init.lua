@@ -4,5 +4,6 @@
 local net = {}
 
 net.SocketTCP = import(".SocketTCP")
+net.WebUtil = import(".WebUtil")
 
 return net

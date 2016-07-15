@@ -6,7 +6,6 @@ local utils = {}
 log:info("init utils")
 utils.ByteArray = import(".ByteArray")
 utils.ByteArrayVarint = import(".ByteArrayVarint")
-utils.Gettext = import(".Gettext")
 utils.filter = import(".filter")
 utils.crypto = import(".crypto")
 

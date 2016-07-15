@@ -15,6 +15,7 @@
 #endif
 
 #include "lua_extensions/lua_will_extensions.h"
+#include "auto/lua_cocos2dx_httprequest_auto.hpp"
 
 using namespace CocosDenshion;
 
@@ -59,7 +60,7 @@ static int register_constom_lua(lua_State* L)
 {
 	// pack
     luaopen_lua_will_extensions(L);
-
+    register_all_cocos2dx_httprequest(L);
 	return 0;
 }
 

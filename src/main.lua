@@ -9,6 +9,8 @@ cc.FileUtils:getInstance():addSearchPath("../../../res/")
 require "config"
 require "cocos.init"
 
+
+
 local function main()
     local game = require("game.Game").new("game")
     game:startup()

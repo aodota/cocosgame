@@ -11,7 +11,6 @@ local pageTestPanel = class("pageTestPanel", BasePanel)
 
 function pageTestPanel:onCreate()
     -- BaseTestScene.onCreate(self)
-    
     -- 重新注册事件
     self:getScene().btn:addClickEventListener(function (event)
         self:getScene():popPanel()

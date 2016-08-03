@@ -16,7 +16,8 @@ function TestLuaScene:onCreate()
         "clone",
         "container",
         "particle",
-        "network"
+        "network",
+        "richtext"
         
     }
     self.layout = require("layout.TestLuaLayout").create()

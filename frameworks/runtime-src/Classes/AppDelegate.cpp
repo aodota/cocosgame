@@ -17,6 +17,7 @@
 #include "lua_extensions/lua_will_extensions.h"
 #include "auto/lua_cocos2dx_httprequest_auto.hpp"
 
+
 using namespace CocosDenshion;
 
 USING_NS_CC;

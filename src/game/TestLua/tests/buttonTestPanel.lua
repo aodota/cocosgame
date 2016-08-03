@@ -50,6 +50,12 @@ function buttonTestPanel:onCreate()
     local switchNode = self.layout['switch_btn']
     switchNode:addChild(switch_btn)
 
+    -- editbox
+    local editbox = cc.EditBox:create(cc.size(480, 60), cc.Scale9Sprite:create(), cc.Scale9Sprite:create())
+    editbox:setPosition(cc.p(500,40))
+    editbox:setPlaceHolder("please input text")
+    self.layout["root"]:addChild(editbox)
+
     self:addChild(self.layout["root"])
 end
 

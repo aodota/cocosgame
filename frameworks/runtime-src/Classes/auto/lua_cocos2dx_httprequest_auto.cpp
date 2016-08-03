@@ -1,5 +1,5 @@
 #include "lua_cocos2dx_httprequest_auto.hpp"
-#include "CCHTTPRequest.h"
+#include "network/CCHTTPRequest.h"
 #include "scripting/lua-bindings/manual/tolua_fix.h"
 #include "scripting/lua-bindings/manual/LuaBasicConversions.h"
 

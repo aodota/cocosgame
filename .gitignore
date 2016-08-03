@@ -18,6 +18,8 @@ frameworks/runtime-src/proj.win32/game.opensdf
 frameworks/runtime-src/proj.win32/game.VC.db
 frameworks/runtime-src/proj.win32/game.VC.*
 frameworks/runtime-src/proj.linux
+xcuserdata
+project.xcworkspace
 simulator/win32/game.pdb
 simulator/win32/game.log
 simulator/win32/game.ilk
@@ -29,3 +31,4 @@ cocostudio-ui/cocosgame/res
 cocostudio-ui/cocosgame/src
 cocostudio-ui/**/*.udf
 cocostudio-ui/res
+

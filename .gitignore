@@ -20,6 +20,7 @@ frameworks/runtime-src/proj.win32/game.VC.*
 frameworks/runtime-src/proj.linux
 xcuserdata
 project.xcworkspace
+.DS_Store
 simulator/win32/game.pdb
 simulator/win32/game.log
 simulator/win32/game.ilk

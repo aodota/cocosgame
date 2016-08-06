@@ -63,14 +63,17 @@ function BaseScene:openPanel(panelName, args)
     local panel = self:createPanel(panelName, "open", args)
     log:info("openPanel %s %s", panelName, panel)
     if panel then
-        -- 关闭其他
-        self:closeAllPanel()
+        -- 关闭其他面板并显示当前面板
+        self:closeAllAndShowWithTransition(panel)
 
-        -- 显示
-        panel:showWithUI()
+        -- -- 关闭其他
+        -- self:closeAllPanel()
 
-        -- 压栈
-        self:pushStack(panel)
+        -- -- 显示
+        -- self:showPanelWithTransition(panel, self.panelStack)
+
+        -- -- 压栈
+        -- self:pushStack(panel)
     end
 end
 
@@ -86,7 +89,7 @@ function BaseScene:pushPanel(panelName, args)
         self:hideAllPanel()
 
         -- 显示
-        panel:showWithUI()
+        self:showPanelWithTransition(panel)
 
         -- 压栈
         self:pushStack(panel)
@@ -108,7 +111,7 @@ function BaseScene:popAndPushPanel(panelName, args)
         self:hideAllPanel()
 
         -- 显示
-        panel:showWithUI()
+        self:showPanelWithTransition(panel)
 
         -- 压栈
         self:pushStack(panel)
@@ -145,6 +148,34 @@ function BaseScene:peekPanel()
 end
 
 --------------------------------
+-- 关闭所有面板，显示当前面板
+-- @function [parent=#BaseScene] closeAllAndShowWithTransition
+function BaseScene:closeAllAndShowWithTransition(showPanel, cleanup)
+    -- 当前面板数量
+    local panelNum = #self.panelStack
+    if panelNum == 0 then
+        self:showPanelWithTransition(showPanel)
+        return
+    end
+    local callbackNum = 0
+    showPanel:retain() -- 否则会被回收
+    local callback = function()
+        callbackNum = callbackNum + 1
+        if (callbackNum == panelNum) then
+            self:showPanelWithTransition(showPanel)
+            showPanel:release()
+
+            -- 压栈
+            self.panelStack = {}
+            self:pushStack(showPanel)
+        end
+    end
+    for _, panel in pairs(self.panelStack) do
+        self:closePanelWithTransition(panel, callback, cleanup)
+    end
+end
+
+--------------------------------
 -- 关闭所有面板
 -- @function [parent=#BaseScene] closeAllPanel
 function BaseScene:closeAllPanel(cleanup)
@@ -170,6 +201,42 @@ end
 -- @function [parent=#BaseScene] pushStack
 function BaseScene:pushStack(panel)
     table.insert(self.panelStack, panel)
+end
+
+--------------------------------
+-- 显示Panel，带过度动画
+-- @param userdata panel 面板
+-- @function [parent=#BaseScene] showPanelWithTransition
+function BaseScene:showPanelWithTransition(panel)
+    -- 显示
+    panel:showWithUI()
+    
+    if panel:getName() ~= "Loading" then
+        panel:setCascadeOpacityEnabled(true)
+        panel:setOpacity(0)
+
+        local fadeIn = cc.FadeIn:create(1)
+        panel:runAction(fadeIn)
+    end
+end
+
+--------------------------------
+-- 关闭Panel，带过度动画
+-- @param userdata panel 面板
+-- @function [parent=#BaseScene] showPanelWithTransition
+function BaseScene:closePanelWithTransition(panel, callback, cleanup)
+    cleanup = cleanup or true
+    local _callback = function() 
+        panel:removeFromParent(cleanup)
+        if callback then
+            callback()
+        end
+    end
+
+    panel:setCascadeOpacityEnabled(true)
+    panel:setOpacity(255)
+    local fadeOut = cc.FadeOut:create(1)
+    panel:runAction(fadeOut, _callback)
 end
 
 --------------------------------

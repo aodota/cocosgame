@@ -63,6 +63,46 @@ function BasePanel:showWithUI()
 end
 
 --------------------------------
+-- 设置递归设置透明度
+-- @function [parent=#BasePanel] setCascadeOpacityEnabled
+function BasePanel:setCascadeOpacityEnabled(value)
+     local childs = self:getChildren()
+     for _, child in pairs(childs) do
+        child:setCascadeOpacityEnabled(value)
+     end
+end
+
+--------------------------------
+-- 设置递归设置透明度
+-- @function [parent=#BasePanel] setOpacity
+function BasePanel:setOpacity(value)
+     local childs = self:getChildren()
+     for _, child in pairs(childs) do
+        child:setOpacity(value)
+     end
+end
+
+--------------------------------
+-- 设置递归设置透明度
+-- @function [parent=#BasePanel] setOpacity
+function BasePanel:runAction(action, callback)
+     local childs = self:getChildren()
+     local childNum = #childs
+     local callbackNum = 0
+     local _callback = function()
+        callbackNum = callbackNum + 1
+        if callback and (callbackNum == childNum) then
+            callback()
+        end
+     end
+     for _, child in pairs(childs) do
+        local action = cc.Sequence:create(action:clone(), cc.CallFunc:create(_callback))
+        child:runAction(action)
+     end
+end
+
+
+--------------------------------
 -- 资源清理
 -- 传入一个<br/>
 -- {

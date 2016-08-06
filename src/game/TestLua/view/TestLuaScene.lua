@@ -46,7 +46,7 @@ function TestLuaScene:openTest(name)
     local panelName = "TestLua.tests." .. name .. "Test"
     local args = {panel = panelName}
     log:info("test %s %s", panelName, args)
-    self:getApp():changeScene("TestLua.tests.Test", {panelName}, "random", 1)
+    self:getApp():changeScene("TestLua.tests.Test", {panelName})
     -- display.replaceScene(require("tests." .. name .. "Test").new(), "random", 1)
 end
 

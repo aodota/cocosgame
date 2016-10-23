@@ -8,5 +8,7 @@ utils.ByteArray = import(".ByteArray")
 utils.ByteArrayVarint = import(".ByteArrayVarint")
 utils.filter = import(".filter")
 utils.crypto = import(".crypto")
+cc.exports.RandomUtil = import(".RandomUtil")
+RandomUtil:init()
 
 return utils

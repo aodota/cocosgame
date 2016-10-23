@@ -30,7 +30,7 @@ function Game:startup()
     cc.exports.app = self
     
     -- 切换到入口函数
-    self:changeScene("TestLua")
+    self:changeScene("Tetris")
 end
 
 return Game

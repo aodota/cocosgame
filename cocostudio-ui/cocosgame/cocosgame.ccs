@@ -13,6 +13,7 @@
             <PlistImageFile Name="PlaySceneBg.jpg" Key="PlaySceneBg.jpg" />
             <PlistImageFile Name="Star.png" Key="Star.png" />
           </PlistImageFolder>
+          <Folder Name="tetris" />
           <Image Name="BugAnt.png" />
           <Audio Name="BugDead.wav" />
           <Audio Name="BugEnterHole.wav" />
@@ -29,6 +30,9 @@
           <Image Name="SliderBar.png" />
           <Image Name="SliderButton.png" />
           <Image Name="Star.png" />
+        </Folder>
+        <Folder Name="tetris">
+          <Image Name="fangkuai.png" />
         </Folder>
         <Folder Name="ui">
           <Folder Name="button">
@@ -60,6 +64,7 @@
         <Project Name="scrollTestPanel.csd" Type="Scene" />
         <Project Name="SliderTestScene.csd" Type="Scene" />
         <Project Name="TestLuaScene.csd" Type="Scene" />
+        <Project Name="TetrisScene.csd" Type="Scene" />
       </RootFolder>
     </Group>
   </SolutionFolder>

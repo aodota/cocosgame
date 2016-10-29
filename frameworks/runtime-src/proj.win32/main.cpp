@@ -2,10 +2,14 @@
 #include "SimulatorWin.h"
 #include <shellapi.h>
 
-int APIENTRY _tWinMain(HINSTANCE hInstance,
-	HINSTANCE hPrevInstance,
-	LPTSTR    lpCmdLine,
-	int       nCmdShow)
+//int APIENTRY _tWinMain(HINSTANCE hInstance,
+//	HINSTANCE hPrevInstance,
+//	LPTSTR    lpCmdLine,
+//	int       nCmdShow)
+int WINAPI _tWinMain(HINSTANCE hInstance,
+        HINSTANCE hPrevInstance,
+        LPTSTR    lpCmdLine,
+        int       nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);

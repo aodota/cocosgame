@@ -11,6 +11,7 @@ cocosgame.luaproj
 cocosgame.config
 game.log
 frameworks/cocos2d-x
+frameworks/cocos2d-x*
 frameworks/runtime-src/proj.win32/.vs
 frameworks/runtime-src/proj.win32/Debug.win32
 frameworks/runtime-src/proj.win32/game.sdf

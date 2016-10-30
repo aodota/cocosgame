@@ -31,6 +31,7 @@ function TetrisScene:onCreate()
     self.grids = {}
     self.id = 0
     self.blockMap = {}
+    self.checkDownCount = 0 -- 计数器
 
     self:addObject(layout["root"], "scene")
     self.scoreText:setText("0")
@@ -41,7 +42,7 @@ function TetrisScene:onCreate()
     self.btnRight:addClickEventListener(handler(self, self.handleRight))
     self.btnPlay:addClickEventListener(handler(self, self.playGame))
     self.btnDown:addClickEventListener(handler(self, self.handleDown))
-    scheduler.scheduleGlobal(handler(self, self.doUpdate), 1)
+    scheduler.scheduleGlobal(handler(self, self.doUpdate), 0.5)
 
     -- 初始化grid
     self:initGrid(480, 570)
@@ -73,10 +74,17 @@ end
 function TetrisScene:doUpdate()
     if self.block ~= nil then
         local x, y = self.block:getPosition()
-        self.block:setPosition(cc.p(x, y - 30))
         if self.block:checkDown(self.grids) then
-            -- 处理向下
-            self:handleDown()
+            self.checkDownCount = self.checkDownCount + 1
+            log:info("doUpdate checkDownCount:%s", self.checkDownCount)
+            if self.checkDownCount == 2 then
+                -- 处理向下
+                self:_handleDown(self.block, false)
+                self.checkDownCount = 0
+            end
+        else
+            self.block:setPosition(cc.p(x, y - 30))
+            self.checkDownCount = 0
         end
     end
 end
@@ -86,6 +94,8 @@ end
 -- @function [parent=#TetrisScene] playGame
 function TetrisScene:playGame()
     self.btnPlay:setVisible(false)
+
+    self:reset()
     self:next()
 end
 
@@ -95,12 +105,42 @@ end
 function TetrisScene:next() 
     self.block = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle)
     self.block:setPosition(cc.p(210, 480))
+
+    self.vrblock = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle)
+    self.vrblock:setPosition(cc.p(210, 480))
+    self.vrblock:setOpacity(125)
+    self:_handleDown(self.vrblock, true)
+
     self.bg:addChild(self.block)
+    self.bg:addChild(self.vrblock)
 
     self.nextBg:removeChild(self.nextBlock)
     self.nextBlock = self:createRandomBlock()
     self.nextBlock:setPosition(cc.p(60 - self.nextBlock.width / 2, 100))
     self.nextBg:addChild(self.nextBlock)
+end
+
+--------------------------------
+-- 清理
+-- @function [parent=#TetrisScene] reset
+function TetrisScene:reset() 
+    for i = 1, #self.grids do
+        for j = 1, #self.grids[i] do
+            if self.grids[i] ~= nil and self.grids[i][j] ~= 0 then
+                self.grids[i][j]:removeFromParent()
+                self.grids[i][j] = 0
+            end
+        end
+    end
+    if self.block ~= nil then
+        self.block:removeFromParent()
+        self.block = nil
+    end
+    if self.vrblock ~= nil then
+        self.vrblock:removeFromParent()
+        self.vrblock = nil
+    end
+    self.scoreText:setText("0")
 end
 
 --------------------------------
@@ -127,7 +167,12 @@ function TetrisScene:handleShift()
     if self.block == nil then
         return
     else
-        self.block:rotation()
+        local x, y = self.block:getPosition()
+        self.vrblock:setPosition(cc.p(x, y))
+
+        self.block:doRotation(self.grids)
+        self.vrblock:doRotation(self.grids)
+        self:_handleDown(self.vrblock, true)
         return
     end
     if self.block.angle == 0 then
@@ -153,7 +198,12 @@ function TetrisScene:handleLeft()
         return
     end
 
-    self.block:handleLeft()
+    local x, y = self.block:getPosition()
+    self.vrblock:setPosition(cc.p(x, y))
+
+    self.block:handleLeft(self.grids)
+    self.vrblock:handleLeft(self.grids)
+    self:_handleDown(self.vrblock, true)
 end
 
 --------------------------------
@@ -164,7 +214,12 @@ function TetrisScene:handleRight()
         return
     end
 
-    self.block:handleRight()
+    local x, y = self.block:getPosition()
+    self.vrblock:setPosition(cc.p(x, y))
+
+    self.block:handleRight(self.grids)
+    self.vrblock:handleRight(self.grids)
+    self:_handleDown(self.vrblock, true)
 end
 
 --------------------------------
@@ -175,18 +230,29 @@ function TetrisScene:handleDown()
         return
     end
 
+    self:_handleDown(self.block, false)
+end
+
+--------------------------------
+-- 处理向下
+-- @function [parent=#TetrisScene] _handleDown
+function TetrisScene:_handleDown(block, simulate)
+    if block == nil then
+        return
+    end
+
     -- 处理掉了
-    if not self.block:handleDown(self.grids) then
+    if not block:handleDown(self.grids, simulate) and not simulate then
         self.scoreText:setText("GAME OVER")
         self.btnPlay:setVisible(true)
-    else
+    elseif not simulate then
         -- 消除判断
         local maxLine = -1
         local removeLines = {}
         for i = 1, #self.grids do
             local canRemove = true
             for j = 1, #self.grids[i] do
-                log:info("remove check, y:%s , x:%s, block:%s", i, j, self.grids[i][j])
+                -- log:info("remove check, y:%s , x:%s, block:%s", i, j, self.grids[i][j])
                 if self.grids[i][j] == 0 then
                     canRemove = false
                     break
@@ -201,7 +267,7 @@ function TetrisScene:handleDown()
         -- 消除处理
         for _, line in pairs(removeLines) do
             for i = 1, #self.grids[line] do
-                log:info("remove block, y:%s , x:%s, block:%s", line, i, self.grids[line][i])
+                -- log:info("remove block, y:%s , x:%s, block:%s", line, i, self.grids[line][i])
                 self.grids[line][i]:removeFromParent()
                 self.grids[line][i] = 0
             end
@@ -212,7 +278,7 @@ function TetrisScene:handleDown()
             local removeNums = #removeLines
             for i = maxLine + 1, #self.grids do
                 for j = 1, #self.grids[i] do
-                    log:info("reset block, y:%s , x:%s, block:%s", i, j, self.grids[i][j])
+                    -- log:info("reset block, y:%s , x:%s, block:%s", i, j, self.grids[i][j])
                     if self.grids[i][j] ~= 0 then
                         local block = self.grids[i][j]
                         local x, y = block:getPosition()
@@ -226,6 +292,10 @@ function TetrisScene:handleDown()
 
         -- 随机下一个
         self.block = nil
+
+        -- 移除vr
+        self.vrblock:removeFromParent()
+        self.vrblock = nil
         self:next()
     end
 

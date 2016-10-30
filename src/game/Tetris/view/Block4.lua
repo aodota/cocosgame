@@ -104,6 +104,8 @@ function Block4:rotation()
         self.sprite2:setPosition(cc.p(0, 60))
         self.sprite3:setPosition(cc.p(0, 30))
         self.sprite4:setPosition(cc.p(0, 0))
+        self.offsetLeft = 0
+        self.offsetRight = 0
     elseif self.angle == 180 then
         self.angle = 270
         self.sprite1:setPosition(cc.p(30, 0))

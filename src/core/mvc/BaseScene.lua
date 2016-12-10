@@ -301,6 +301,18 @@ function BaseScene:addObject(obj, layerName, zorder, tag)
 end
 
 --------------------------------
+-- 修正Layout布局
+-- @param layout obj layout对象
+-- @function [parent=#BaseScene] fixLayout
+function BaseScene:fixLayout(layout)
+    local panel = layout["panel"]
+    if panel then
+        panel:setAnchorPoint(0.5, 0.5)
+        panel:setPosition(display.cx, display.cy)
+    end
+end
+
+--------------------------------
 -- 获取应用
 -- @function [parent=#BaseScene] getApp
 function BaseScene:getApp()

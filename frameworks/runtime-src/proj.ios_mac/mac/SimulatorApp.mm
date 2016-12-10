@@ -150,6 +150,7 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     ProjectConfig tmpConfig;
     NSArray *nsargs = [[NSProcessInfo processInfo] arguments];
     long n = [nsargs count];
+    tmpConfig.setProjectDir("/Workspace/Git/cocosgame/");
     if (n >= 2)
     {
         vector<string> args;
@@ -164,6 +165,8 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
             // FIXME:
             // for Code IDE before RC2
             tmpConfig.setProjectDir(args.at(1));
+        } else {
+            tmpConfig.setProjectDir("/Workspace/Git/cocosgame/");
         }
 
         tmpConfig.parseCommandLine(args);
@@ -316,6 +319,13 @@ static void glfwDropFunc(GLFWwindow *window, int count, const char **files)
     if (projectDir.length())
     {
         FileUtils::getInstance()->setDefaultResourceRootPath(projectDir);
+        if (_project.isWriteDebugLogToFile())
+        {
+            [self writeDebugLogToFile:_project.getDebugLogFilePath()];
+        }
+    } else {
+        _project.setProjectDir("/Workspace/Git/cocosgame/");
+        FileUtils::getInstance()->setDefaultResourceRootPath("/Workspace/Git/cocosgame/");
         if (_project.isWriteDebugLogToFile())
         {
             [self writeDebugLogToFile:_project.getDebugLogFilePath()];

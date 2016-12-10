@@ -282,7 +282,7 @@ function BaseBlock:handleDown(grids, simulate)
         gridY = i
         fit = true
         for _, value in pairs(array) do
-            log:info("check grid y:%s, x:%s, block:%s", gridY + value[2], gridX + value[1], grids[gridY + value[2]][gridX + value[1]])
+            log:info("check grid y:%s, x:%s", gridY + value[2], gridX + value[1])
             if grids[gridY + value[2]] ~= nil and grids[gridY + value[2]][gridX + value[1]] ~= 0 then
                 fit = false
                 break

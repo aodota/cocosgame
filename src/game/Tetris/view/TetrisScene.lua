@@ -18,8 +18,10 @@ local Block7 = import(".Block7")
 -- 创建方法
 -- @function [parent=#TetrisScene] onCreate
 function TetrisScene:onCreate()
-    log:info("TetrisScene onCreate")
+    log:info("TetrisScene onCreate1112")
     local layout = require("layout.TetrisScene").create()
+    self:fixLayout(layout)
+
     self.btnLeft = layout['btn_left']
     self.btnShift = layout['btn_shift']
     self.btnRight = layout['btn_right']
@@ -28,12 +30,14 @@ function TetrisScene:onCreate()
     self.scoreText = layout['lb_score']
     self.btnPlay = layout['btn_play']
     self.btnDown = layout['btn_down']
+    self.btnDownLow = layout['btn_down_low']
     self.grids = {}
     self.id = 0
     self.blockMap = {}
     self.checkDownCount = 0 -- 计数器
     self.blockWidth = 27
     self.fixPixel = 3
+    self.gameOver = false
 
     self:addObject(layout["root"], "scene")
     self.scoreText:setText("0")
@@ -44,6 +48,7 @@ function TetrisScene:onCreate()
     self.btnRight:addClickEventListener(handler(self, self.handleRight))
     self.btnPlay:addClickEventListener(handler(self, self.playGame))
     self.btnDown:addClickEventListener(handler(self, self.handleDown))
+    self.btnDownLow:addClickEventListener(handler(self, self.handleDownLow))
     scheduler.scheduleGlobal(handler(self, self.doUpdate), 1)
 
     -- 初始化grid
@@ -74,6 +79,10 @@ end
 -- 每一帧运行
 -- @function [parent=#TetrisScene] playGame
 function TetrisScene:doUpdate()
+    if self.gameOver then
+        return
+    end
+
     if self.block ~= nil then
         local x, y = self.block:getPosition()
         if self.block:checkDown(self.grids) then
@@ -143,6 +152,7 @@ function TetrisScene:reset()
         self.vrblock = nil
     end
     self.scoreText:setText("0")
+    self.gameOver = false
 end
 
 --------------------------------
@@ -235,6 +245,26 @@ function TetrisScene:handleDown()
     self:_handleDown(self.block, false)
 end
 
+function TetrisScene:handleDownLow()
+    if self.block ~= nil then
+        for i=1,2 do
+            local x, y = self.block:getPosition()
+            if self.block:checkDown(self.grids, ratio) then
+                self.checkDownCount = self.checkDownCount + 1
+                log:info("doUpdate checkDownCount:%s", self.checkDownCount)
+                if self.checkDownCount == 2 then
+                    -- 处理向下
+                    self:_handleDown(self.block, false)
+                    self.checkDownCount = 0
+                end
+            else
+                self.block:setPosition(cc.p(x, y - self.blockWidth))
+                self.checkDownCount = 0
+            end
+        end
+    end
+end
+
 --------------------------------
 -- 处理向下
 -- @function [parent=#TetrisScene] _handleDown
@@ -247,6 +277,7 @@ function TetrisScene:_handleDown(block, simulate)
     if not block:handleDown(self.grids, simulate) and not simulate then
         self.scoreText:setText("GAME OVER")
         self.btnPlay:setVisible(true)
+        self.gameOver = true
     elseif not simulate then
         -- 消除判断
         local maxLine = -1

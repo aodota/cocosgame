@@ -55,7 +55,14 @@
           </Folder>
           <Folder Name="tetris">
             <Image Name="bg.png" />
+            <Image Name="bg_bk.png" />
+            <Image Name="down.png" />
+            <Image Name="down_fast.png" />
             <Image Name="fangkuai.png" />
+            <Image Name="left.png" />
+            <Image Name="right.png" />
+            <Image Name="scene_bg.png" />
+            <Image Name="shift.png" />
           </Folder>
         </Folder>
         <Project Name="ButtonTestScene.csd" Type="Scene" />
@@ -69,6 +76,7 @@
         <Project Name="SliderTestScene.csd" Type="Scene" />
         <Project Name="TestLuaScene.csd" Type="Scene" />
         <Project Name="TetrisScene.csd" Type="Scene" />
+        <Project Name="TetrisNode.csd" Type="Node" />
       </RootFolder>
     </Group>
   </SolutionFolder>

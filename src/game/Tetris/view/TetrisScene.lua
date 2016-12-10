@@ -32,6 +32,7 @@ function TetrisScene:onCreate()
     self.id = 0
     self.blockMap = {}
     self.checkDownCount = 0 -- 计数器
+    self.blockWidth = 28
 
     self:addObject(layout["root"], "scene")
     self.scoreText:setText("0")
@@ -42,10 +43,10 @@ function TetrisScene:onCreate()
     self.btnRight:addClickEventListener(handler(self, self.handleRight))
     self.btnPlay:addClickEventListener(handler(self, self.playGame))
     self.btnDown:addClickEventListener(handler(self, self.handleDown))
-    scheduler.scheduleGlobal(handler(self, self.doUpdate), 0.5)
+    -- scheduler.scheduleGlobal(handler(self, self.doUpdate), 0.5)
 
     -- 初始化grid
-    self:initGrid(397, 875)
+    self:initGrid(392, 840)
 
     -- 初始化背景
     -- self.bg = cc.LayerColor:create(ccc4(0x9C, 0xA3, 0xFC, 0xCC), 479, 570)
@@ -57,13 +58,13 @@ function TetrisScene:onCreate()
     self.angle = 0
     -- for i=1, 7 do
     --     local block = self:createRandomBlock(i)
-    --     block:setPosition(cc.p(100 + (i - 1) * 150, 300))
-    --     self:addChild(block)
+    --     block:setPosition(cc.p(10 + (i - 1) * 150, 300))
+    --     self.bg:addChild(block)
     --     table.insert(self.blocks, block)
     -- end
     self.nextBlock = self:createRandomBlock()
     log:info("blockType:%s, contentSize:%s",self.nextBlock.blockType, self.nextBlock.width)
-    self.nextBlock:setPosition(cc.p(60 - self.nextBlock.width / 2, 100))
+    self.nextBlock:setPosition(cc.p(self.blockWidth * 2 - self.nextBlock.width / 2, 100))
     self.nextBg:addChild(self.nextBlock)
 
 end
@@ -83,7 +84,7 @@ function TetrisScene:doUpdate()
                 self.checkDownCount = 0
             end
         else
-            self.block:setPosition(cc.p(x, y - 30))
+            self.block:setPosition(cc.p(x, y - self.blockWidth))
             self.checkDownCount = 0
         end
     end
@@ -104,23 +105,19 @@ end
 -- @function [parent=#TetrisScene] playGame
 function TetrisScene:next() 
     self.block = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle)
-<<<<<<< HEAD
-    self.block:setPosition(cc.p(210, 870))
-=======
-    self.block:setPosition(cc.p(210, 480))
+    self.block:setPosition(cc.p(196, 840))
 
     self.vrblock = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle)
-    self.vrblock:setPosition(cc.p(210, 480))
+    self.vrblock:setPosition(cc.p(196, 0))
     self.vrblock:setOpacity(125)
     self:_handleDown(self.vrblock, true)
 
->>>>>>> 9a5226322d76c276a2b2febf51b55507d9e562ce
     self.bg:addChild(self.block)
     self.bg:addChild(self.vrblock)
 
     self.nextBg:removeChild(self.nextBlock)
     self.nextBlock = self:createRandomBlock()
-    self.nextBlock:setPosition(cc.p(60 - self.nextBlock.width / 2, 100))
+    self.nextBlock:setPosition(cc.p(self.blockWidth * 2 - self.nextBlock.width / 2, 100))
     self.nextBg:addChild(self.nextBlock)
 end
 
@@ -151,8 +148,8 @@ end
 -- 初始化Grid
 -- @function [parent=#TetrisScene] initGrid
 function TetrisScene:initGrid(width, height)
-    local x = width / 30
-    local y = height / 30
+    local x = width / self.blockWidth
+    local y = height / self.blockWidth
     for i = 1, y do
         for j = 1, x do
             if self.grids[i] == nil then
@@ -180,9 +177,9 @@ function TetrisScene:handleShift()
         return
     end
     if self.block.angle == 0 then
-        self.block:setRotation(90)
-        self.block.angle = 90
-    elseif self.block.angle == 90 then
+        self.block:setRotation(self.blockWidth * 3)
+        self.block.angle = self.blockWidth * 3
+    elseif self.block.angle == self.blockWidth * 3 then
         self.block:setRotation(180)
         self.block.angle = 180
     elseif self.block.angle == 180 then
@@ -286,7 +283,7 @@ function TetrisScene:_handleDown(block, simulate)
                     if self.grids[i][j] ~= 0 then
                         local block = self.grids[i][j]
                         local x, y = block:getPosition()
-                        block:setPosition(cc.p(x, y - 30 * removeNums))
+                        block:setPosition(cc.p(x, y - self.blockWidth * removeNums))
                         self.grids[i][j] = 0
                         self.grids[i - removeNums][j] = block
                     end
@@ -310,13 +307,13 @@ end
 -- 创建一个随机方块
 -- @function [parent=#TetrisScene] createRandomBlock
 function TetrisScene:createRandomBlock()
-    local type = RandomUtil:nextInt(7)
-    angleType = RandomUtil:nextInt(4)
+    local type = 1
+    angleType = 1
     angle = 0
     if angleType == 1 then
         angle = 0
     elseif angleType == 2 then
-        angle = 90
+        angle = self.blockWidth * 3
     elseif angleType == 3 then
         angle = 180
     else

@@ -8,8 +8,9 @@ local BaseBlock = class("BaseBlock", cc.Node)
 -- 构造函数
 -- @function [parent=#BaseBlock] ctor
 function BaseBlock:ctor(blockType, angle, min, max)
+    self.blockWidth = 27
     self.blockType = blockType
-    self.angle = angle - 90
+    self.angle = angle - self.blockWidth * 3
     self.offsetLeft = 0
     self.offsetRight = 0
     self.min = min
@@ -54,7 +55,7 @@ function BaseBlock:doRotation(grids)
         if self._angle == 0 then
             self.angle = 270
         else
-            self.angle = self._angle - 90
+            self.angle = self._angle - self.blockWidth * 3
         end
         self:rotation()
     end
@@ -67,7 +68,7 @@ function BaseBlock:handleLeft(grids)
     local x, y = self:getPosition()
     local sx, sy = x, y
     log:info("handleLeft x:%s, y:%s, offsetX:%s, angle:%s", x, y, self.offsetLeft, self.angle)
-    x = x - 30
+    x = x - self.blockWidth
     local min = (self.min + self.offsetLeft)
     -- if min > self.min then
     --     min = self.min
@@ -90,7 +91,7 @@ function BaseBlock:handleRight(grids)
     local x, y = self:getPosition()
     local sx, sy = x, y
     log:info("handleRight x:%s, y:%s, offsetX:%s, angle:%s", x, y, self.offsetRight, self.angle)
-    x = x + 30
+    x = x + self.blockWidth
     local max = self.max + self.offsetRight
     -- if max < self.max then
     --     max = self.max
@@ -114,16 +115,16 @@ function BaseBlock:checkDown(grids)
     -- 计算需要占用的格子
     array = {}
     local x, y = self.sprite1:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite1})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
 
     x, y = self.sprite2:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite2})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
 
     x, y = self.sprite3:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite3})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
 
     x, y = self.sprite4:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite4})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
     
     local minx = 0
     local miny = 0
@@ -151,8 +152,8 @@ function BaseBlock:checkDown(grids)
     end
 
     x, y = self:getPosition()
-    local gridX = x / 30 + 1 + minx
-    local gridY = y / 30 + miny
+    local gridX = x / self.blockWidth + 1 + minx
+    local gridY = y / self.blockWidth + miny
     if gridY < 1 then
         return true
     end
@@ -177,16 +178,16 @@ function BaseBlock:checkCollision(grids)
     -- 计算需要占用的格子
     array = {}
     local x, y = self.sprite1:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite1})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
 
     x, y = self.sprite2:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite2})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
 
     x, y = self.sprite3:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite3})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
 
     x, y = self.sprite4:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite4})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
     
     local minx = 0
     local miny = 0
@@ -214,8 +215,8 @@ function BaseBlock:checkCollision(grids)
     end
 
     x, y = self:getPosition()
-    local gridX = x / 30 + 1 + minx
-    local gridY = y / 30 + 1 + miny
+    local gridX = x / self.blockWidth + 1 + minx
+    local gridY = y / self.blockWidth + 1 + miny
 
 
     for _, value in pairs(array) do
@@ -235,16 +236,16 @@ function BaseBlock:handleDown(grids, simulate)
     -- 计算需要占用的格子
     array = {}
     local x, y = self.sprite1:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite1})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
 
     x, y = self.sprite2:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite2})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
 
     x, y = self.sprite3:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite3})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
 
     x, y = self.sprite4:getPosition()
-    table.insert(array, {x / 30, y / 30, self.sprite4})
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
     
     local minx = 0
     local miny = 0
@@ -272,7 +273,7 @@ function BaseBlock:handleDown(grids, simulate)
     end
 
     x, y = self:getPosition()
-    local gridX = x / 30 + 1 + minx
+    local gridX = x / self.blockWidth + 1 + minx
     local gridY = 1
     local fit  = false
     for i = 1, #grids do
@@ -300,7 +301,7 @@ function BaseBlock:handleDown(grids, simulate)
                 grids[gridY + value[2]][gridX + value[1]] = value[3]
             end
         end
-        self:setPosition(cc.p(x, (gridY + offsetY - 1) * 30))
+        self:setPosition(cc.p(x, (gridY + offsetY - 1) * self.blockWidth))
         return true
     end
 

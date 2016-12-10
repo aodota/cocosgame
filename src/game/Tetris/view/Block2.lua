@@ -17,7 +17,7 @@ local Block2 = class("Block2", BaseBlock)
 -- @function [parent=#Block2] ctor
 function Block2:ctor(angle, min, max)
     BaseBlock.ctor(self, 2, angle, min, max)
-    self.offsetRight = 30
+    self.offsetRight = self.blockWidth
 
     self:createBlock()
     self:rotation()
@@ -27,8 +27,8 @@ end
 -- 创建Block
 -- @function [parent=#Block2] createBlock
 function Block2:createBlock()
-    local bg = cc.Sprite:create() -- cc.LayerColor:create(ccc4(0xFF, 0x00, 0x00, 0x80), 60, 60) -- --
-    bg:setContentSize(cc.size(60,60))
+    local bg = cc.Sprite:create() -- cc.LayerColor:create(ccc4(0xFF, 0x00, 0x00, 0x80), self.blockWidth * 2, self.blockWidth * 2) -- --
+    bg:setContentSize(cc.size(self.blockWidth * 2,self.blockWidth * 2))
     bg:setAnchorPoint(0, 0)
 
     local sprite1 = cc.Sprite:create('tetris/fangkuai.png')
@@ -39,13 +39,13 @@ function Block2:createBlock()
     sprite1:setPosition(cc.p(0, 0))
     sprite1:setAnchorPoint(cc.p(0, 0))
 
-    sprite2:setPosition(cc.p(30, 0))
+    sprite2:setPosition(cc.p(self.blockWidth, 0))
     sprite2:setAnchorPoint(cc.p(0, 0))
 
-    sprite3:setPosition(cc.p(0, 30))
+    sprite3:setPosition(cc.p(0, self.blockWidth))
     sprite3:setAnchorPoint(cc.p(0, 0))
 
-    sprite4:setPosition(cc.p(30, 30))
+    sprite4:setPosition(cc.p(self.blockWidth, self.blockWidth))
     sprite4:setAnchorPoint(cc.p(0, 0))
 
     bg:addChild(sprite1)
@@ -53,7 +53,7 @@ function Block2:createBlock()
     bg:addChild(sprite3)
     bg:addChild(sprite4)
     self:addChild(bg)
-    self.width = 60
+    self.width = self.blockWidth * 2
 
     self.sprite1 = sprite1
     self.sprite2 = sprite2

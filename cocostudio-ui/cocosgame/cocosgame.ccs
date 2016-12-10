@@ -53,6 +53,10 @@
             <Image Name="slider_2.png" />
             <Image Name="slider_bg.png" />
           </Folder>
+          <Folder Name="tetris">
+            <Image Name="bg.png" />
+            <Image Name="fangkuai.png" />
+          </Folder>
         </Folder>
         <Project Name="ButtonTestScene.csd" Type="Scene" />
         <Project Name="ListTestPanel.csd" Type="Scene" />

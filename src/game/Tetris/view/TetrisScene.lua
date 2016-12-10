@@ -23,7 +23,7 @@ function TetrisScene:onCreate()
     self.btnLeft = layout['btn_left']
     self.btnShift = layout['btn_shift']
     self.btnRight = layout['btn_right']
-    self.bg = layout['bg']
+    self.bg = layout['panel']
     self.nextBg = layout['next_bg']
     self.scoreText = layout['lb_score']
     self.btnPlay = layout['btn_play']
@@ -44,7 +44,7 @@ function TetrisScene:onCreate()
     scheduler.scheduleGlobal(handler(self, self.doUpdate), 1)
 
     -- 初始化grid
-    self:initGrid(480, 570)
+    self:initGrid(397, 875)
 
     -- 初始化背景
     -- self.bg = cc.LayerColor:create(ccc4(0x9C, 0xA3, 0xFC, 0xCC), 479, 570)
@@ -94,7 +94,7 @@ end
 -- @function [parent=#TetrisScene] playGame
 function TetrisScene:next() 
     self.block = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle)
-    self.block:setPosition(cc.p(210, 480))
+    self.block:setPosition(cc.p(210, 870))
     self.bg:addChild(self.block)
 
     self.nextBg:removeChild(self.nextBlock)

@@ -23,7 +23,7 @@ function TetrisScene:onCreate()
     self.btnLeft = layout['btn_left']
     self.btnShift = layout['btn_shift']
     self.btnRight = layout['btn_right']
-    self.bg = layout['panel']
+    self.bg = layout['tetris_bg']
     self.nextBg = layout['next_bg']
     self.scoreText = layout['lb_score']
     self.btnPlay = layout['btn_play']
@@ -32,7 +32,8 @@ function TetrisScene:onCreate()
     self.id = 0
     self.blockMap = {}
     self.checkDownCount = 0 -- 计数器
-    self.blockWidth = 28
+    self.blockWidth = 27
+    self.fixPixel = 3
 
     self:addObject(layout["root"], "scene")
     self.scoreText:setText("0")
@@ -43,10 +44,10 @@ function TetrisScene:onCreate()
     self.btnRight:addClickEventListener(handler(self, self.handleRight))
     self.btnPlay:addClickEventListener(handler(self, self.playGame))
     self.btnDown:addClickEventListener(handler(self, self.handleDown))
-    -- scheduler.scheduleGlobal(handler(self, self.doUpdate), 0.5)
+    scheduler.scheduleGlobal(handler(self, self.doUpdate), 1)
 
     -- 初始化grid
-    self:initGrid(392, 840)
+    self:initGrid(378, 810)
 
     -- 初始化背景
     -- self.bg = cc.LayerColor:create(ccc4(0x9C, 0xA3, 0xFC, 0xCC), 479, 570)
@@ -104,11 +105,11 @@ end
 -- 下一个方块
 -- @function [parent=#TetrisScene] playGame
 function TetrisScene:next() 
-    self.block = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle)
-    self.block:setPosition(cc.p(196, 840))
+    self.block = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle, self.nextBlock.pic)
+    self.block:setPosition(cc.p(165, 759))
 
-    self.vrblock = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle)
-    self.vrblock:setPosition(cc.p(196, 0))
+    self.vrblock = self:createBlock(self.nextBlock.blockType, self.nextBlock.angle, self.nextBlock.pic)
+    self.vrblock:setPosition(cc.p(165, 3))
     self.vrblock:setOpacity(125)
     self:_handleDown(self.vrblock, true)
 
@@ -176,19 +177,19 @@ function TetrisScene:handleShift()
         self:_handleDown(self.vrblock, true)
         return
     end
-    if self.block.angle == 0 then
-        self.block:setRotation(self.blockWidth * 3)
-        self.block.angle = self.blockWidth * 3
-    elseif self.block.angle == self.blockWidth * 3 then
-        self.block:setRotation(180)
-        self.block.angle = 180
-    elseif self.block.angle == 180 then
-        self.block:setRotation(270)
-        self.block.angle = 270
-    elseif self.block.angle == 270 then
-        self.block:setRotation(0)
-        self.block.angle = 0
-    end
+    -- if self.block.angle == 0 then
+    --     self.block:setRotation(self.blockWidth * 3)
+    --     self.block.angle = self.blockWidth * 3
+    -- elseif self.block.angle == self.blockWidth * 3 then
+    --     self.block:setRotation(180)
+    --     self.block.angle = 180
+    -- elseif self.block.angle == 180 then
+    --     self.block:setRotation(270)
+    --     self.block.angle = 270
+    -- elseif self.block.angle == 270 then
+    --     self.block:setRotation(0)
+    --     self.block.angle = 0
+    -- end
 end
 
 --------------------------------
@@ -307,8 +308,9 @@ end
 -- 创建一个随机方块
 -- @function [parent=#TetrisScene] createRandomBlock
 function TetrisScene:createRandomBlock()
-    local type = 1
-    angleType = 1
+    local type = RandomUtil:nextInt(7)
+    local angleType = RandomUtil:nextInt(4)
+    local pic = 'tetris/fangkuai' .. RandomUtil:nextInt(7) .. '.png'
     angle = 0
     if angleType == 1 then
         angle = 0
@@ -319,28 +321,28 @@ function TetrisScene:createRandomBlock()
     else
         angle = 270
     end
-    return self:createBlock(type, angle)
+    return self:createBlock(type, angle, pic)
 end
 
 --------------------------------
 -- 创建一个随机方块
 -- @function [parent=#TetrisScene] createRandomBlock
-function TetrisScene:createBlock(type, angle)
+function TetrisScene:createBlock(type, angle, pic)
     local block = nil
     if type == 1 then
-        block = Block1:create(angle, 0, 390)
+        block = Block1:create(angle, 3, 300, pic)
     elseif type == 2 then
-        block = Block2:create(angle, 0, 390)
+        block = Block2:create(angle, 3, 300, pic)
     elseif type == 3 then
-        block = Block3:create(angle, 0, 390)
+        block = Block3:create(angle, 3, 300, pic)
     elseif type == 4 then
-        block = Block4:create(angle, 0, 390)
+        block = Block4:create(angle, 3, 300, pic)
     elseif type == 5 then
-        block = Block5:create(angle, 0, 390)
+        block = Block5:create(angle, 3, 300, pic)
     elseif type == 6 then
-        block = Block6:create(angle, 0, 390)
+        block = Block6:create(angle, 3, 300, pic)
     elseif type == 7 then
-        block = Block7:create(angle, 0, 390)
+        block = Block7:create(angle, 3, 300, pic)
     end
     -- block:setRotation(angle)
 

@@ -7,14 +7,16 @@ local BaseBlock = class("BaseBlock", cc.Node)
 --------------------------------
 -- 构造函数
 -- @function [parent=#BaseBlock] ctor
-function BaseBlock:ctor(blockType, angle, min, max)
+function BaseBlock:ctor(blockType, angle, min, max, pic)
     self.blockWidth = 27
+    self.fixPixel = 3
     self.blockType = blockType
-    self.angle = angle - self.blockWidth * 3
+    self.angle = angle - 90
     self.offsetLeft = 0
     self.offsetRight = 0
     self.min = min
     self.max = max
+    self.pic = 'tetris/fangkuai' .. self.blockType .. '.png'
 end
 
 --------------------------------
@@ -55,7 +57,7 @@ function BaseBlock:doRotation(grids)
         if self._angle == 0 then
             self.angle = 270
         else
-            self.angle = self._angle - self.blockWidth * 3
+            self.angle = self._angle - 90
         end
         self:rotation()
     end
@@ -152,8 +154,8 @@ function BaseBlock:checkDown(grids)
     end
 
     x, y = self:getPosition()
-    local gridX = x / self.blockWidth + 1 + minx
-    local gridY = y / self.blockWidth + miny
+    local gridX = math.floor(x / self.blockWidth + 1 + minx)
+    local gridY = math.floor(y / self.blockWidth + miny)
     if gridY < 1 then
         return true
     end
@@ -215,8 +217,8 @@ function BaseBlock:checkCollision(grids)
     end
 
     x, y = self:getPosition()
-    local gridX = x / self.blockWidth + 1 + minx
-    local gridY = y / self.blockWidth + 1 + miny
+    local gridX = math.floor(x / self.blockWidth + 1 + minx)
+    local gridY = math.floor(y / self.blockWidth + 1 + miny)
 
 
     for _, value in pairs(array) do
@@ -273,14 +275,14 @@ function BaseBlock:handleDown(grids, simulate)
     end
 
     x, y = self:getPosition()
-    local gridX = x / self.blockWidth + 1 + minx
+    local gridX = math.floor(x / self.blockWidth + 1 + minx)
     local gridY = 1
     local fit  = false
     for i = 1, #grids do
         gridY = i
         fit = true
         for _, value in pairs(array) do
-            -- log:info("check grid y:%s, x:%s, block:%s", gridY + value[2], gridX + value[1], grids[gridY + value[2]][gridX + value[1]])
+            log:info("check grid y:%s, x:%s, block:%s", gridY + value[2], gridX + value[1], grids[gridY + value[2]][gridX + value[1]])
             if grids[gridY + value[2]] ~= nil and grids[gridY + value[2]][gridX + value[1]] ~= 0 then
                 fit = false
                 break

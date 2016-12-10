@@ -32,8 +32,8 @@ local Block5 = class("Block5", BaseBlock)
 --------------------------------
 -- 构造函数
 -- @function [parent=#Block5] ctor
-function Block5:ctor(angle, min, max)
-    BaseBlock.ctor(self, 5, angle, min, max)
+function Block5:ctor(angle, min, max, pic)
+    BaseBlock.ctor(self, 5, angle, min, max, pic)
 
     self:createBlock()
     self:rotation()
@@ -47,10 +47,10 @@ function Block5:createBlock()
     bg:setContentSize(cc.size(self.blockWidth * 3,self.blockWidth * 2))
     bg:setAnchorPoint(0, 0)
 
-    local sprite1 = cc.Sprite:create('tetris/fangkuai.png')
-    local sprite2 = cc.Sprite:create('tetris/fangkuai.png')
-    local sprite3 = cc.Sprite:create('tetris/fangkuai.png')
-    local sprite4 = cc.Sprite:create('tetris/fangkuai.png')
+    local sprite1 = cc.Sprite:create(self.pic)
+    local sprite2 = cc.Sprite:create(self.pic)
+    local sprite3 = cc.Sprite:create(self.pic)
+    local sprite4 = cc.Sprite:create(self.pic)
 
     sprite1:setPosition(cc.p(0, 0))
     sprite1:setAnchorPoint(cc.p(0, 0))
@@ -90,13 +90,13 @@ function Block5:rotation()
     end
 
     if self.angle == 0 then
-        self.angle = self.blockWidth * 3
+        self.angle = 90
         self.sprite1:setPosition(cc.p(self.blockWidth, self.blockWidth))
         self.sprite3:setPosition(cc.p(self.blockWidth, -self.blockWidth))
         self.sprite4:setPosition(cc.p(self.blockWidth * 2, 0))
         self.offsetLeft = -self.blockWidth
         self.offsetRight = 0
-    elseif self.angle == self.blockWidth * 3 then
+    elseif self.angle == 90 then
         self.angle = 180
         self.sprite1:setPosition(cc.p(self.blockWidth * 2, self.blockWidth))
         self.sprite2:setPosition(cc.p(self.blockWidth, self.blockWidth))

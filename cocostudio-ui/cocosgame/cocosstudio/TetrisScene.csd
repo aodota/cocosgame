@@ -9,23 +9,23 @@
           <AbstractNodeData Name="panel" ActionTag="1918327196" Tag="34" IconVisible="False" TouchEnable="True" ClipAble="False" ColorAngle="90.0000" LeftEage="131" RightEage="131" TopEage="288" BottomEage="288" Scale9OriginX="-131" Scale9OriginY="-288" Scale9Width="262" Scale9Height="576" ctype="PanelObjectData">
             <Size X="640.0000" Y="1136.0000" />
             <Children>
-              <AbstractNodeData Name="scene_bg" ActionTag="-389944647" Tag="64" IconVisible="False" PositionPercentXEnabled="True" PositionPercentYEnabled="True" LeftMargin="-106.0000" RightMargin="-106.0000" LeftEage="281" RightEage="281" TopEage="374" BottomEage="374" Scale9OriginX="281" Scale9OriginY="374" Scale9Width="290" Scale9Height="388" ctype="ImageViewObjectData">
+              <AbstractNodeData Name="scene_bg" ActionTag="-389944647" Tag="64" IconVisible="False" PositionPercentXEnabled="True" PositionPercentYEnabled="True" LeftMargin="-106.8654" RightMargin="-105.1345" TopMargin="-0.8655" BottomMargin="0.8655" LeftEage="281" RightEage="281" TopEage="374" BottomEage="374" Scale9OriginX="281" Scale9OriginY="374" Scale9Width="290" Scale9Height="388" ctype="ImageViewObjectData">
                 <Size X="852.0000" Y="1136.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="320.0000" Y="568.0000" />
+                <Position X="319.1346" Y="568.8655" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.5000" Y="0.5000" />
+                <PrePosition X="0.4986" Y="0.5008" />
                 <PreSize X="1.3312" Y="1.0000" />
                 <FileData Type="Normal" Path="ui/tetris/scene_bg.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="bg_bk" ActionTag="867144031" Tag="63" IconVisible="False" LeftMargin="-13.2597" RightMargin="-15.7403" TopMargin="-17.5854" BottomMargin="240.5854" LeftEage="220" RightEage="220" TopEage="301" BottomEage="301" Scale9OriginX="220" Scale9OriginY="301" Scale9Width="229" Scale9Height="311" ctype="ImageViewObjectData">
+              <AbstractNodeData Name="bg_bk" ActionTag="867144031" Tag="63" IconVisible="False" LeftMargin="-14.2451" RightMargin="-14.7549" TopMargin="-16.3331" BottomMargin="239.3331" LeftEage="220" RightEage="220" TopEage="301" BottomEage="301" Scale9OriginX="220" Scale9OriginY="301" Scale9Width="229" Scale9Height="311" ctype="ImageViewObjectData">
                 <Size X="669.0000" Y="913.0000" />
                 <AnchorPoint />
-                <Position X="-13.2597" Y="240.5854" />
+                <Position X="-14.2451" Y="239.3331" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="-0.0207" Y="0.2118" />
+                <PrePosition X="-0.0223" Y="0.2107" />
                 <PreSize X="1.0453" Y="0.8037" />
                 <FileData Type="Normal" Path="ui/tetris/bg_bk.png" Plist="" />
               </AbstractNodeData>
@@ -70,74 +70,46 @@
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
               </AbstractNodeData>
-              <AbstractNodeData Name="lb_score_title" ActionTag="-122094484" Tag="38" IconVisible="False" LeftMargin="449.0606" RightMargin="90.9394" TopMargin="56.5544" BottomMargin="1047.4456" FontSize="28" LabelText="SCORE" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="TextObjectData">
-                <Size X="100.0000" Y="32.0000" />
-                <AnchorPoint ScaleX="0.5578" ScaleY="0.8825" />
-                <Position X="504.8406" Y="1075.6855" />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
-                <CColor A="255" R="0" G="0" B="0" />
-                <PrePosition X="0.7888" Y="0.9469" />
-                <PreSize X="0.1563" Y="0.0282" />
-                <OutlineColor A="255" R="255" G="0" B="0" />
-                <ShadowColor A="255" R="110" G="110" B="110" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="score_bg" ActionTag="92402435" Tag="37" IconVisible="False" LeftMargin="443.2690" RightMargin="76.7310" TopMargin="96.1306" BottomMargin="839.8694" TouchEnable="True" ClipAble="False" BackColorAlpha="102" ComboBoxIndex="1" ColorAngle="90.0000" Scale9Width="1" Scale9Height="1" ctype="PanelObjectData">
-                <Size X="120.0000" Y="200.0000" />
-                <Children>
-                  <AbstractNodeData Name="lb_score" ActionTag="1120273999" Tag="39" IconVisible="False" LeftMargin="30.5464" RightMargin="35.4536" TopMargin="71.5012" BottomMargin="91.4988" FontSize="32" LabelText="100" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="TextObjectData">
-                    <Size X="54.0000" Y="37.0000" />
-                    <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                    <Position X="57.5464" Y="109.9988" />
-                    <Scale ScaleX="1.0000" ScaleY="1.0000" />
-                    <CColor A="255" R="255" G="255" B="255" />
-                    <PrePosition X="0.4796" Y="0.5500" />
-                    <PreSize X="0.4500" Y="0.1850" />
-                    <OutlineColor A="255" R="255" G="0" B="0" />
-                    <ShadowColor A="255" R="0" G="0" B="0" />
-                  </AbstractNodeData>
-                </Children>
-                <AnchorPoint />
-                <Position X="443.2690" Y="839.8694" />
+              <AbstractNodeData Name="lb_score" ActionTag="-1933401380" Tag="65" IconVisible="False" LeftMargin="451.0427" RightMargin="68.9573" TopMargin="134.0876" BottomMargin="951.9124" CharWidth="30" CharHeight="50" LabelText="5211" StartChar="0" ctype="TextAtlasObjectData">
+                <Size X="120.0000" Y="50.0000" />
+                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+                <Position X="511.0427" Y="976.9124" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.6926" Y="0.7393" />
-                <PreSize X="0.1875" Y="0.1761" />
-                <SingleColor A="255" R="57" G="141" B="234" />
+                <PrePosition X="0.7985" Y="0.8600" />
+                <PreSize X="0.1875" Y="0.0440" />
+                <LabelAtlasFileImage_CNB Type="Normal" Path="ui/tetris/number.png" Plist="" />
+              </AbstractNodeData>
+              <AbstractNodeData Name="next_bg" ActionTag="-1369861544" Tag="71" IconVisible="False" LeftMargin="461.9214" RightMargin="88.0786" TopMargin="399.1131" BottomMargin="646.8869" TouchEnable="True" ClipAble="False" BackColorAlpha="102" ColorAngle="90.0000" ctype="PanelObjectData">
+                <Size X="90.0000" Y="90.0000" />
+                <AnchorPoint />
+                <Position X="461.9214" Y="646.8869" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition X="0.7218" Y="0.5694" />
+                <PreSize X="0.1406" Y="0.0792" />
+                <SingleColor A="255" R="150" G="200" B="255" />
                 <FirstColor A="255" R="150" G="200" B="255" />
                 <EndColor A="255" R="255" G="255" B="255" />
                 <ColorVector ScaleY="1.0000" />
               </AbstractNodeData>
-              <AbstractNodeData Name="lb_next_title" ActionTag="202446109" Tag="36" IconVisible="False" LeftMargin="464.1984" RightMargin="100.8016" TopMargin="326.8862" BottomMargin="777.1138" FontSize="28" LabelText="NEXT" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="TextObjectData">
-                <Size X="75.0000" Y="32.0000" />
-                <AnchorPoint ScaleX="0.4821" ScaleY="0.6071" />
-                <Position X="500.3559" Y="796.5410" />
-                <Scale ScaleX="1.0000" ScaleY="1.0000" />
-                <CColor A="255" R="0" G="0" B="0" />
-                <PrePosition X="0.7818" Y="0.7012" />
-                <PreSize X="0.1172" Y="0.0282" />
-                <OutlineColor A="255" R="255" G="0" B="0" />
-                <ShadowColor A="255" R="110" G="110" B="110" />
-              </AbstractNodeData>
-              <AbstractNodeData Name="next_bg" ActionTag="1947493623" Tag="35" IconVisible="False" LeftMargin="446.3487" RightMargin="73.6513" TopMargin="366.4624" BottomMargin="569.5376" TouchEnable="True" ClipAble="False" BackColorAlpha="102" ComboBoxIndex="1" ColorAngle="90.0000" Scale9Width="1" Scale9Height="1" ctype="PanelObjectData">
-                <Size X="120.0000" Y="200.0000" />
-                <AnchorPoint />
-                <Position X="446.3487" Y="569.5376" />
+              <AbstractNodeData Name="next_bg_title" ActionTag="1665194029" Tag="66" IconVisible="False" LeftMargin="472.9672" RightMargin="87.0328" TopMargin="487.7642" BottomMargin="618.2358" LeftEage="26" RightEage="26" TopEage="9" BottomEage="9" Scale9OriginX="26" Scale9OriginY="9" Scale9Width="28" Scale9Height="12" ctype="ImageViewObjectData">
+                <Size X="80.0000" Y="30.0000" />
+                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+                <Position X="512.9672" Y="633.2358" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.6974" Y="0.5014" />
-                <PreSize X="0.1875" Y="0.1761" />
-                <SingleColor A="255" R="57" G="141" B="234" />
-                <FirstColor A="255" R="150" G="200" B="255" />
-                <EndColor A="255" R="255" G="255" B="255" />
-                <ColorVector ScaleY="1.0000" />
+                <PrePosition X="0.8015" Y="0.5574" />
+                <PreSize X="0.1250" Y="0.0264" />
+                <FileData Type="Normal" Path="ui/tetris/NEXT.png" Plist="" />
               </AbstractNodeData>
-              <AbstractNodeData Name="btn_play" ActionTag="608945743" Tag="41" IconVisible="False" LeftMargin="71.0040" RightMargin="328.9960" TopMargin="576.5071" BottomMargin="439.4929" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="210" Scale9Height="98" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
+              <AbstractNodeData Name="btn_play" ActionTag="608945743" Tag="41" IconVisible="False" LeftMargin="110.1754" RightMargin="289.8246" TopMargin="392.7013" BottomMargin="623.2987" TouchEnable="True" FontSize="14" Scale9Enable="True" LeftEage="15" RightEage="15" TopEage="11" BottomEage="11" Scale9OriginX="15" Scale9OriginY="11" Scale9Width="210" Scale9Height="98" ShadowOffsetX="2.0000" ShadowOffsetY="-2.0000" ctype="ButtonObjectData">
                 <Size X="240.0000" Y="120.0000" />
                 <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
-                <Position X="191.0040" Y="499.4929" />
+                <Position X="230.1754" Y="683.2987" />
                 <Scale ScaleX="1.0000" ScaleY="1.0000" />
                 <CColor A="255" R="255" G="255" B="255" />
-                <PrePosition X="0.2984" Y="0.4397" />
+                <PrePosition X="0.3596" Y="0.6015" />
                 <PreSize X="0.3750" Y="0.1056" />
                 <TextColor A="255" R="65" G="65" B="70" />
                 <DisabledFileData Type="PlistSubImage" Path="PlayButton.png" Plist="res/pack.plist" />
@@ -190,6 +162,38 @@
                 <NormalFileData Type="Normal" Path="ui/tetris/left.png" Plist="" />
                 <OutlineColor A="255" R="255" G="0" B="0" />
                 <ShadowColor A="255" R="110" G="110" B="110" />
+              </AbstractNodeData>
+              <AbstractNodeData Name="del_line" ActionTag="-1212860882" Tag="68" IconVisible="False" LeftMargin="473.8242" RightMargin="110.1758" TopMargin="720.5052" BottomMargin="396.4948" ctype="SpriteObjectData">
+                <Size X="56.0000" Y="19.0000" />
+                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+                <Position X="501.8242" Y="405.9948" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition X="0.7841" Y="0.3574" />
+                <PreSize X="0.0875" Y="0.0167" />
+                <FileData Type="Normal" Path="ui/tetris/del_line.png" Plist="" />
+                <BlendFunc Src="1" Dst="771" />
+              </AbstractNodeData>
+              <AbstractNodeData Name="hang" ActionTag="-1919698513" Tag="69" IconVisible="False" LeftMargin="528.6428" RightMargin="91.3572" TopMargin="720.0048" BottomMargin="395.9953" ctype="SpriteObjectData">
+                <Size X="20.0000" Y="20.0000" />
+                <AnchorPoint ScaleX="0.4497" ScaleY="0.4381" />
+                <Position X="537.6376" Y="404.7581" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition X="0.8401" Y="0.3563" />
+                <PreSize X="0.0313" Y="0.0176" />
+                <FileData Type="Normal" Path="ui/tetris/hang.png" Plist="" />
+                <BlendFunc Src="1" Dst="771" />
+              </AbstractNodeData>
+              <AbstractNodeData Name="lb_hang" ActionTag="2123746600" Tag="72" IconVisible="False" LeftMargin="495.5633" RightMargin="114.4367" TopMargin="752.1444" BottomMargin="368.8556" CharWidth="10" CharHeight="15" LabelText="100" StartChar="0" ctype="TextAtlasObjectData">
+                <Size X="30.0000" Y="15.0000" />
+                <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />
+                <Position X="510.5633" Y="376.3556" />
+                <Scale ScaleX="1.0000" ScaleY="1.0000" />
+                <CColor A="255" R="255" G="255" B="255" />
+                <PrePosition X="0.7978" Y="0.3313" />
+                <PreSize X="0.0469" Y="0.0132" />
+                <LabelAtlasFileImage_CNB Type="Normal" Path="ui/tetris/small number.png" Plist="" />
               </AbstractNodeData>
             </Children>
             <AnchorPoint ScaleX="0.5000" ScaleY="0.5000" />

@@ -110,12 +110,47 @@ function BaseBlock:handleRight(grids)
     end
 end
 
+function BaseBlock:getOffset()
+    local array = {}
+    local x, y = self.sprite1:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
+
+    x, y = self.sprite2:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
+
+    x, y = self.sprite3:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
+
+    x, y = self.sprite4:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
+    
+    local minx = 0
+    local miny = 0
+    for _, value in pairs(array) do
+        if value[1] < minx then
+            minx = value[1]
+        end
+        if value[2] < miny then
+            miny = value[2]
+        end
+    end
+    local offsetX = 0
+    local offsetY = 0
+    if minx < 0 then
+        offsetX = -minx
+    end
+    if miny < 0 then
+        offsetY = -miny
+    end
+    return offsetX * self.blockWidth, offsetY * self.blockWidth
+end
+
 --------------------------------
 -- 处理向下
 -- @function [parent=#BaseBlock] checkDown
 function BaseBlock:checkDown(grids)
     -- 计算需要占用的格子
-    array = {}
+    local array = {}
     local x, y = self.sprite1:getPosition()
     table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
 
@@ -178,7 +213,7 @@ end
 -- @function [parent=#BaseBlock] checkCollision
 function BaseBlock:checkCollision(grids)
     -- 计算需要占用的格子
-    array = {}
+    local array = {}
     local x, y = self.sprite1:getPosition()
     table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
 
@@ -236,7 +271,7 @@ end
 -- @function [parent=#BaseBlock] handleDown
 function BaseBlock:handleDown(grids, simulate)
     -- 计算需要占用的格子
-    array = {}
+    local array = {}
     local x, y = self.sprite1:getPosition()
     table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
 

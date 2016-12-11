@@ -56,13 +56,18 @@
           <Folder Name="tetris">
             <Image Name="bg.png" />
             <Image Name="bg_bk.png" />
+            <Image Name="del_line.png" />
             <Image Name="down.png" />
             <Image Name="down_fast.png" />
             <Image Name="fangkuai.png" />
+            <Image Name="hang.png" />
             <Image Name="left.png" />
+            <Image Name="NEXT.png" />
+            <Image Name="number.png" />
             <Image Name="right.png" />
             <Image Name="scene_bg.png" />
             <Image Name="shift.png" />
+            <Image Name="small number.png" />
           </Folder>
         </Folder>
         <Project Name="ButtonTestScene.csd" Type="Scene" />

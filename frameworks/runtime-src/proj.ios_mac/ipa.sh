@@ -1,10 +1,9 @@
-#工程绝对路径
-#cd $1
+# 工程绝对路径
 project_path=$(pwd)
-#build文件夹路径
+# build文件夹路径
 build_path=${project_path}/build
 
-#工程配置文件路径
+# 工程配置文件路径
 project_name=$(ls | grep xcodeproj | awk -F.xcodeproj '{print $1}')
 #project_infoplist_path=${project_path}/${project_name}/${project_name}-Info.plist
 #取版本号
@@ -18,14 +17,14 @@ project_name=$(ls | grep xcodeproj | awk -F.xcodeproj '{print $1}')
 cd $project_path
 # echo clean start ...
 # #删除bulid目录
-# if  [ -d ${build_path} ];then
-# rm -rf ${build_path}
-# echo clean build_path success.
-# fi
-#清理工程
-#xcodebuild clean || exit
-#去掉xcode源码末尾的空格
-#find . -name "*.[hm]" | xargs sed -Ee 's/ +$//g' -i ""
+if  [ -d ${build_path} ];then
+    rm -rf ${build_path}
+    echo clean build_path success.
+fi
+# 清理工程
+# xcodebuild clean || exit
+# 去掉xcode源码末尾的空格
+# find . -name "*.[hm]" | xargs sed -Ee 's/ +$//g' -i ""
 
 #编译工程
 xcodebuild  -configuration Release \
@@ -33,17 +32,21 @@ xcodebuild  -configuration Release \
 -target ${project_name}-mobile \
 CONFIGURATION_BUILD_DIR=${project_path}/build/Release-iphoneos
 
-
+# 删除ipa目录
 if [ -d ./ipa-build ];then
     rm -rf ipa-build
 fi
-#打包
+
+# 打包
 cd $build_path
 mkdir -p ipa-build/Payload
 cp -r ./Release-iphoneos/*.app ./ipa-build/Payload/
+
+# 打包IPA
 cd ipa-build
 zip -r ${project_name}.ipa *
 
+# 输出产品路径
 echo ${build_path}/ipa-build/${project_name}.ipa
 #找到桌面路径
 # cd ~/Desktop

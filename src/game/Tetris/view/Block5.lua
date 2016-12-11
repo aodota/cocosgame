@@ -43,7 +43,7 @@ end
 -- 创建Block
 -- @function [parent=#Block5] createBlock
 function Block5:createBlock()
-    local bg = cc.Sprite:create()--cc.LayerColor:create(ccc4(0xFF, 0x00, 0x00, 0x80), self.blockWidth * 3, self.blockWidth * 2)
+    local bg = cc.Sprite:create() --cc.LayerColor:create(ccc4(0xFF, 0x00, 0x00, 0x80), self.blockWidth * 3, self.blockWidth * 2)
     bg:setContentSize(cc.size(self.blockWidth * 3,self.blockWidth * 2))
     bg:setAnchorPoint(0, 0)
 

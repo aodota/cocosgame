@@ -17,6 +17,7 @@ function BaseBlock:ctor(blockType, angle, min, max, pic)
     self.min = min
     self.max = max
     self.pic = 'tetris/fangkuai' .. self.blockType .. '.png'
+    self.nextOffset = 0
 end
 
 --------------------------------
@@ -198,7 +199,7 @@ function BaseBlock:checkDown(grids)
     for i = gridY, #grids do
         fit = true
         for _, value in pairs(array) do
-            log:info("checkDown grid y:%s, x:%s", i + value[2], gridX + value[1])
+            -- log:info("checkDown grid y:%s, x:%s", i + value[2], gridX + value[1])
             if grids[i + value[2]] ~= nil and grids[i + value[2]][gridX + value[1]] ~= 0 then
                 return true
             end
@@ -257,7 +258,7 @@ function BaseBlock:checkCollision(grids)
 
 
     for _, value in pairs(array) do
-        log:info("checkCollision grid y:%s, x:%s", gridY + value[2], gridX + value[1])
+        -- log:info("checkCollision grid y:%s, x:%s", gridY + value[2], gridX + value[1])
         if grids[gridY + value[2]] ~= nil and grids[gridY + value[2]][gridX + value[1]] ~= 0 then
             return true
         end
@@ -311,34 +312,39 @@ function BaseBlock:handleDown(grids, simulate)
 
     x, y = self:getPosition()
     local gridX = math.floor(x / self.blockWidth + 1 + minx)
-    local gridY = 1
+    local gridY = math.floor(y / self.blockWidth + miny)
     local fit  = false
+    local fitY = -1
     for i = 1, #grids do
-        gridY = i
         fit = true
         for _, value in pairs(array) do
-            log:info("check grid y:%s, x:%s", gridY + value[2], gridX + value[1])
-            if grids[gridY + value[2]] ~= nil and grids[gridY + value[2]][gridX + value[1]] ~= 0 then
+            -- log:info("check grid y:%s, x:%s", gridY + value[2], gridX + value[1])
+            if grids[i + value[2]] ~= nil and grids[i + value[2]][gridX + value[1]] ~= 0 then
                 fit = false
                 break
             end
         end
         if fit then
-            break
+            if fitY == -1 or fitY > i then
+                fitY = i
+            end
+        elseif fitY >= 0 and fitY < gridY then
+            fitY = -1
         end
     end
 
     if fit then
         if not simulate then
+            gridY = fitY
             for _, value in pairs(array) do
                 if grids[gridY + value[2]] == nil then
                     return false
                 end
-                log:info("fill grid y:%s, x:%s", gridY + value[2], gridX + value[1])
+                -- log:info("fill grid y:%s, x:%s", gridY + value[2], gridX + value[1])
                 grids[gridY + value[2]][gridX + value[1]] = value[3]
             end
         end
-        self:setPosition(cc.p(x, (gridY + offsetY - 1) * self.blockWidth))
+        self:setPosition(cc.p(x, (gridY + offsetY - 1) * self.blockWidth + self.fixPixel))
         return true
     end
 

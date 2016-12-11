@@ -35,6 +35,7 @@ local Block4 = class("Block4", BaseBlock)
 function Block4:ctor(angle, min, max, pic)
     BaseBlock.ctor(self, 4, angle, min, max, pic)
     self.max = self.max + self.blockWidth
+    self.nextOffset = self.blockWidth / 2
 
     self:createBlock()
     self:rotation()
@@ -44,7 +45,7 @@ end
 -- 创建Block
 -- @function [parent=#Block4] createBlock
 function Block4:createBlock()
-    local bg = cc.Sprite:create()--cc.LayerColor:create(ccc4(0xFF, 0x00, 0x00, 0x80), self.blockWidth * 2, self.blockWidth * 3)
+    local bg = cc.Sprite:create() --cc.LayerColor:create(ccc4(0xFF, 0x00, 0x00, 0x80), self.blockWidth * 2, self.blockWidth * 3)
     bg:setContentSize(cc.size(self.blockWidth * 2,self.blockWidth * 3))
     bg:setAnchorPoint(0, 0)
     

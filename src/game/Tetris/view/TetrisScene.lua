@@ -47,11 +47,20 @@ function TetrisScene:onCreate()
 
     -- 添加事件
     self.btnShift:addClickEventListener(handler(self, self.handleShift))
+    -- self.btnShift:addLongPressEventListener(handler(self, self.handleShift), 0.1)
+
     self.btnLeft:addClickEventListener(handler(self, self.handleLeft))
+    self.btnLeft:addLongPressEventListener(handler(self, self.handleLeft), 0.2)
+
     self.btnRight:addClickEventListener(handler(self, self.handleRight))
+    self.btnRight:addLongPressEventListener(handler(self, self.handleRight), 0.2)
+
     self.btnPlay:addClickEventListener(handler(self, self.playGame))
     self.btnDown:addClickEventListener(handler(self, self.handleDown))
+
     self.btnDownLow:addClickEventListener(handler(self, self.handleDownLow))
+    self.btnDownLow:addLongPressEventListener(handler(self, self.handleDownLow), 0.1)
+
     scheduler.scheduleGlobal(handler(self, self.doUpdate), 1)
 
     -- 初始化grid
@@ -72,14 +81,14 @@ function TetrisScene:onCreate()
     --     table.insert(self.blocks, block)
     -- end
     self.nextBlock = self:createRandomBlock()
-    log:info("blockType:%s, contentSize:%s",self.nextBlock.blockType, self.nextBlock.width)
-    local fix = (81 - self.nextBlock.width)
-    if fix < 0 then
-        fix = 0
-    end
+    -- 处理居中
     local offsetx, offsety = self.nextBlock:getOffset()
-    self.nextBlock:setPosition(cc.p(offsetx + fix, offsety))
+    self.nextBlock:setPosition(cc.p(offsetx + self.nextBlock.nextOffset, offsety))
     self.nextBg:addChild(self.nextBlock)
+
+
+    -- 处理长按
+
 
 end
 
@@ -87,7 +96,7 @@ end
 -- 每一帧运行
 -- @function [parent=#TetrisScene] playGame
 function TetrisScene:doUpdate()
-    if self.gameOver then
+    if self.gameOver or self.btnLeft.longPress or self.btnRight.longPress then
         return
     end
 
@@ -95,7 +104,6 @@ function TetrisScene:doUpdate()
         local x, y = self.block:getPosition()
         if self.block:checkDown(self.grids) then
             self.checkDownCount = self.checkDownCount + 1
-            log:info("doUpdate checkDownCount:%s", self.checkDownCount)
             if self.checkDownCount == 2 then
                 -- 处理向下
                 self:_handleDown(self.block, false)
@@ -136,13 +144,19 @@ function TetrisScene:next()
     self.nextBg:removeChild(self.nextBlock)
     self.nextBlock = self:createRandomBlock()
     local offsetx, offsety = self.nextBlock:getOffset()
-    log:info("nextBlock width:%s, offsetx:%s, offsety:%s", self.nextBlock.width, offsetx, offsety)
-    local fix = (81 - self.nextBlock.width)
-    if fix < 0 then
-        fix = 0
-    end
-    self.nextBlock:setPosition(cc.p(offsetx + fix, offsety))
+ 
+    self.nextBlock:setPosition(cc.p(offsetx + self.nextBlock.nextOffset, offsety))
     self.nextBg:addChild(self.nextBlock)
+
+    self.btnShift.ended = true
+    self.btnLeft.ended = true
+    self.btnRight.ended = true
+    self.btnDownLow.ended = true
+    if self.downScheduler then
+        scheduler.unscheduleGlobal(self.downScheduler)
+        self.downScheduler = nil
+        scheduler.setTimeScale(1)
+    end
 end
 
 --------------------------------
@@ -249,7 +263,7 @@ function TetrisScene:handleRight()
 end
 
 --------------------------------
--- 处理向下
+-- 处理极速下降
 -- @function [parent=#TetrisScene] handleDown
 function TetrisScene:handleDown()
     if self.block == nil then
@@ -257,26 +271,34 @@ function TetrisScene:handleDown()
     end
 
     self:_handleDown(self.block, false)
+    self:shake(self, 0.05)
 end
 
+--------------------------------
+-- 处理加速下降
+-- @function [parent=#TetrisScene] handleDownLow
 function TetrisScene:handleDownLow()
-    if self.block ~= nil then
-        for i=1,2 do
-            local x, y = self.block:getPosition()
-            if self.block:checkDown(self.grids, ratio) then
-                self.checkDownCount = self.checkDownCount + 1
-                log:info("doUpdate checkDownCount:%s", self.checkDownCount)
-                if self.checkDownCount == 2 then
-                    -- 处理向下
-                    self:_handleDown(self.block, false)
-                    self.checkDownCount = 0
-                end
-            else
-                self.block:setPosition(cc.p(x, y - self.blockWidth))
-                self.checkDownCount = 0
-            end
-        end
+    if self.downScheduler then
+        scheduler.unscheduleGlobal(self.downScheduler)
+        self.downScheduler = nil
+        scheduler.setTimeScale(1) 
+    elseif self.btnDownLow.ended and self.btnDownLow.longPressTrigger then
+        return
     end
+
+    -- 加速
+    scheduler.setTimeScale(20)
+    self.downInterval = 0
+
+    -- 计时间
+    self.downScheduler = scheduler.scheduleUpdateGlobal(function(dt) 
+        self.downInterval = self.downInterval + dt
+        if not self.btnDownLow.longPress and self.downInterval > 2 then
+            scheduler.setTimeScale(1)
+            scheduler.unscheduleGlobal(self.downScheduler)
+            self.downScheduler = nil
+        end
+    end)
 end
 
 --------------------------------
@@ -311,46 +333,86 @@ function TetrisScene:_handleDown(block, simulate)
         end
 
         -- 消除处理
+        local removeBlocks = {}
         for _, line in pairs(removeLines) do
             for i = 1, #self.grids[line] do
                 -- log:info("remove block, y:%s , x:%s, block:%s", line, i, self.grids[line][i])
-                self.grids[line][i]:removeFromParent()
+                -- self.grids[line][i]:removeFromParent()
+                table.insert(removeBlocks, self.grids[line][i])
                 self.grids[line][i] = 0
             end
         end
 
-        -- 处理上面的方块
-        if maxLine ~= -1 then
-            local removeNums = #removeLines
-            for i = maxLine + 1, #self.grids do
-                for j = 1, #self.grids[i] do
-                    -- log:info("reset block, y:%s , x:%s, block:%s", i, j, self.grids[i][j])
-                    if self.grids[i][j] ~= 0 then
-                        local block = self.grids[i][j]
-                        local x, y = block:getPosition()
-                        block:setPosition(cc.p(x, y - self.blockWidth * removeNums))
-                        self.grids[i][j] = 0
-                        self.grids[i - removeNums][j] = block
-                    end
-                end           
+        self.maxLine = maxLine
+        self.removeLineNums = #removeLines
+        self.callbackNums = #removeBlocks
+        self.callbackCount = 0
+        log:info("init remove callback callbackCount:%s, callbackNums:%s", self.callbackCount, self.callbackNums)
+
+        -- 闪烁效果
+        if #removeBlocks > 0 then
+            scheduler.setTimeScale(1)
+            if self.btnDownLow.longPress then
+                self.btnDownLow.ended = true
+            end
+            local action = cc.Blink:create(0.8, 5)
+            for _, block in pairs(removeBlocks) do
+                local sequence = cc.Sequence:create(action:clone(), cc.CallFunc:create(handler(self, self.removeCallBack), {sender = block}))
+                block:runAction(sequence)
             end
         end
 
-        -- 随机下一个
-        self.block = nil
-
-        -- 移除vr
-        -- self.vrblock:removeFromParent()
-        -- self.vrblock = nil
-        self:next()
-
-        -- 更新分数
-        self.hang = self.hang + #removeLines
-        self.scoreHang:setString(self.hang)
-        self.scoreText:setString(self.hang * 10)
+        if #removeBlocks == 0 then
+            self:removeCallBack()
+        end
     end
 
     
+end
+
+function TetrisScene:removeCallBack(sender)
+    log:info("remove callback sender:%s, callbackCount:%s, callbackNums:%s", sender, self.callbackCount, self.callbackNums)
+    if sender then
+        sender:removeFromParent()
+    end
+
+    self.callbackCount = self.callbackCount + 1
+    if self.callbackCount < self.callbackNums then
+        return
+    end
+
+    -- 处理上面的方块
+    if self.maxLine ~= -1 then
+        local removeLineNums = self.removeLineNums
+        for i = self.maxLine + 1, #self.grids do
+            for j = 1, #self.grids[i] do
+                -- log:info("reset block, y:%s , x:%s, block:%s", i, j, self.grids[i][j])
+                if self.grids[i][j] ~= 0 then
+                    local block = self.grids[i][j]
+                    local x, y = block:getPosition()
+                    block:setPosition(cc.p(x, y - self.blockWidth * removeLineNums))
+                    self.grids[i][j] = 0
+                    self.grids[i - removeLineNums][j] = block
+                end
+            end           
+        end
+    end
+
+    -- 随机下一个
+    self.block = nil
+
+    -- 移除vr
+    -- self.vrblock:removeFromParent()
+    -- self.vrblock = nil
+    self:next()
+
+    -- 更新分数
+    self.hang = self.hang + self.removeLineNums
+    self.scoreHang:setString(self.hang)
+    self.scoreText:setString(self.hang * 10)
+
+    self.maxLine = -1
+    self.removeLineNums = 0
 end
 
 --------------------------------
@@ -358,7 +420,7 @@ end
 -- @function [parent=#TetrisScene] createRandomBlock
 function TetrisScene:createRandomBlock()
     local type = RandomUtil:nextInt(7)
-    local angleType = RandomUtil:nextInt(4)
+    local angleType = 1 -- RandomUtil:nextInt(4)
     local pic = 'tetris/fangkuai' .. RandomUtil:nextInt(7) .. '.png'
     angle = 0
     if angleType == 1 then
@@ -393,7 +455,6 @@ function TetrisScene:createBlock(type, angle, pic)
     elseif type == 7 then
         block = Block7:create(angle, 3, 300, pic)
     end
-    -- block:setRotation(angle)
 
     return block
 end
@@ -403,6 +464,25 @@ end
 -- @function [parent=#TetrisScene] onExit
 function TetrisScene:onExit()
     -- 卸载资源
+end
+
+--------------------------------
+-- 震屏效果
+-- @function [parent=#TetrisScene] shake
+function TetrisScene:shake(node, interval)
+    local x, y = node:getPosition()
+    local _interval = 0
+    local schedulerHandle = nil
+    schedulerHandle = scheduler.scheduleUpdateGlobal(function(dt) 
+        _interval = _interval + dt
+        if _interval < interval then
+            node:setPosition(x, y + 400 * dt)
+        else
+            node:setPosition(x, y)
+            scheduler.unscheduleGlobal(schedulerHandle)
+        end
+    end)
+
 end
 
 

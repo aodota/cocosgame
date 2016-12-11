@@ -181,4 +181,12 @@ function scheduler.performWithDelayGlobal(listener, time)
     return handle
 end
 
+--------------------------------
+-- 加速执行
+-- @function [parent=#scheduler] setTimeScale
+-- @param number scale 加速度
+function scheduler.setTimeScale(scale)
+    sharedScheduler:setTimeScale(scale)
+end
+
 return scheduler

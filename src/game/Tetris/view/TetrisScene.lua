@@ -476,7 +476,7 @@ function TetrisScene:shake(node, interval)
     schedulerHandle = scheduler.scheduleUpdateGlobal(function(dt) 
         _interval = _interval + dt
         if _interval < interval then
-            node:setPosition(x, y + 400 * dt)
+            node:setPosition(x, y - 400 * dt)
         else
             node:setPosition(x, y)
             scheduler.unscheduleGlobal(schedulerHandle)

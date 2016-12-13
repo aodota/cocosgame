@@ -70,7 +70,7 @@ end
 function BaseBlock:handleLeft(grids)
     local x, y = self:getPosition()
     local sx, sy = x, y
-    log:info("handleLeft x:%s, y:%s, offsetX:%s, angle:%s", x, y, self.offsetLeft, self.angle)
+    -- log:info("handleLeft x:%s, y:%s, offsetX:%s, angle:%s", x, y, self.offsetLeft, self.angle)
     x = x - self.blockWidth
     local min = (self.min + self.offsetLeft)
     -- if min > self.min then
@@ -93,7 +93,7 @@ end
 function BaseBlock:handleRight(grids)
     local x, y = self:getPosition()
     local sx, sy = x, y
-    log:info("handleRight x:%s, y:%s, offsetX:%s, angle:%s", x, y, self.offsetRight, self.angle)
+    -- log:info("handleRight x:%s, y:%s, offsetX:%s, angle:%s", x, y, self.offsetRight, self.angle)
     x = x + self.blockWidth
     local max = self.max + self.offsetRight
     -- if max < self.max then
@@ -111,102 +111,13 @@ function BaseBlock:handleRight(grids)
     end
 end
 
-function BaseBlock:getOffset()
-    local array = {}
-    local x, y = self.sprite1:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
-
-    x, y = self.sprite2:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
-
-    x, y = self.sprite3:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
-
-    x, y = self.sprite4:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
-    
-    local minx = 0
-    local miny = 0
-    for _, value in pairs(array) do
-        if value[1] < minx then
-            minx = value[1]
-        end
-        if value[2] < miny then
-            miny = value[2]
-        end
-    end
-    local offsetX = 0
-    local offsetY = 0
-    if minx < 0 then
-        offsetX = -minx
-    end
-    if miny < 0 then
-        offsetY = -miny
-    end
-    return offsetX * self.blockWidth, offsetY * self.blockWidth
-end
-
 --------------------------------
--- 处理向下
--- @function [parent=#BaseBlock] checkDown
-function BaseBlock:checkDown(grids)
-    -- 计算需要占用的格子
-    local array = {}
-    local x, y = self.sprite1:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
+-- 获取格子的偏移量
+-- @function [parent=#BaseBlock] getGridArray
+function BaseBlock:getOffSet()
+    local offsetX, offsetY = self:_getGridArrayOffSet(self:getGridArray())
 
-    x, y = self.sprite2:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
-
-    x, y = self.sprite3:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
-
-    x, y = self.sprite4:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
-    
-    local minx = 0
-    local miny = 0
-    for _, value in pairs(array) do
-        if value[1] < minx then
-            minx = value[1]
-        end
-        if value[2] < miny then
-            miny = value[2]
-        end
-    end
-    local offsetX = 0
-    local offsetY = 0
-    if minx < 0 then
-        offsetX = -minx
-    end
-    if miny < 0 then
-        offsetY = -miny
-    end
-    if offsetX > 0 or offsetY > 0 then
-        for _, value in pairs(array) do
-            value[1] = value[1] + offsetX
-            value[2] = value[2] + offsetY
-        end
-    end
-
-    x, y = self:getPosition()
-    local gridX = math.floor(x / self.blockWidth + 1 + minx)
-    local gridY = math.floor(y / self.blockWidth + miny)
-    if gridY < 1 then
-        return true
-    end
-    -- log:info("checkDown, gridY:%s, gridX:%s", gridY, gridX)
-    for i = gridY, #grids do
-        fit = true
-        for _, value in pairs(array) do
-            -- log:info("checkDown grid y:%s, x:%s", i + value[2], gridX + value[1])
-            if grids[i + value[2]] ~= nil and grids[i + value[2]][gridX + value[1]] ~= 0 then
-                return true
-            end
-        end
-    end
-
-    return false
+    return offsetX * self.blockWidth, offsetY * self.blockWidth
 end
 
 --------------------------------
@@ -214,49 +125,15 @@ end
 -- @function [parent=#BaseBlock] checkCollision
 function BaseBlock:checkCollision(grids)
     -- 计算需要占用的格子
-    local array = {}
-    local x, y = self.sprite1:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
+    local array = self:getPositiveGridArray()
+    local offsetX, offsetY, minx, miny = self:_getGridArrayOffSet(self:getGridArray())
 
-    x, y = self.sprite2:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
-
-    x, y = self.sprite3:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
-
-    x, y = self.sprite4:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
-    
-    local minx = 0
-    local miny = 0
-    for _, value in pairs(array) do
-        if value[1] < minx then
-            minx = value[1]
-        end
-        if value[2] < miny then
-            miny = value[2]
-        end
-    end
-    local offsetX = 0
-    local offsetY = 0
-    if minx < 0 then
-        offsetX = -minx
-    end
-    if miny < 0 then
-        offsetY = -miny
-    end
-    if offsetX > 0 or offsetY > 0 then
-        for _, value in pairs(array) do
-            value[1] = value[1] + offsetX
-            value[2] = value[2] + offsetY
-        end
-    end
-
+    -- 计算自己所在的逻辑坐标
     x, y = self:getPosition()
     local gridX = math.floor(x / self.blockWidth + 1 + minx)
     local gridY = math.floor(y / self.blockWidth + 1 + miny)
 
-
+    -- 计算自己所在位置是否合法
     for _, value in pairs(array) do
         -- log:info("checkCollision grid y:%s, x:%s", gridY + value[2], gridX + value[1])
         if grids[gridY + value[2]] ~= nil and grids[gridY + value[2]][gridX + value[1]] ~= 0 then
@@ -268,53 +145,53 @@ function BaseBlock:checkCollision(grids)
 end
 
 --------------------------------
+-- 检查是否可以继续向下
+-- @function [parent=#BaseBlock] checkDown
+function BaseBlock:checkDown(grids)
+    -- 计算需要占用的格子
+    local array = self:getPositiveGridArray()
+    local offsetX, offsetY, minx, miny = self:_getGridArrayOffSet(self:getGridArray())
+
+    -- 计算自己所在坐标
+    x, y = self:getPosition()
+    local gridX = math.floor(x / self.blockWidth + 1 + minx)
+    local gridY = math.floor(y / self.blockWidth + miny)
+
+    -- 到底部了
+    if gridY < 1 then
+        return true
+    end
+
+    -- 从当前坐标开始检查
+    for i = gridY, #grids do
+        fit = true
+        for _, value in pairs(array) do
+            if grids[i + value[2]] ~= nil and grids[i + value[2]][gridX + value[1]] ~= 0 then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
+--------------------------------
 -- 处理向下
 -- @function [parent=#BaseBlock] handleDown
 function BaseBlock:handleDown(grids, simulate)
     -- 计算需要占用的格子
-    local array = {}
-    local x, y = self.sprite1:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
+    local array = self:getPositiveGridArray()
+    local offsetX, offsetY, minx, miny = self:_getGridArrayOffSet(self:getGridArray())
 
-    x, y = self.sprite2:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
+    log:info("offsetX:%s, offsetY:%s, minx:%s, miny:%s", offsetX, offsetY, minx, miny)
+    log:info("array:%s", #array)
 
-    x, y = self.sprite3:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
-
-    x, y = self.sprite4:getPosition()
-    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
-    
-    local minx = 0
-    local miny = 0
-    for _, value in pairs(array) do
-        if value[1] < minx then
-            minx = value[1]
-        end
-        if value[2] < miny then
-            miny = value[2]
-        end
-    end
-    local offsetX = 0
-    local offsetY = 0
-    if minx < 0 then
-        offsetX = -minx
-    end
-    if miny < 0 then
-        offsetY = -miny
-    end
-    if offsetX > 0 or offsetY > 0 then
-        for _, value in pairs(array) do
-            value[1] = value[1] + offsetX
-            value[2] = value[2] + offsetY
-        end
-    end
-
+    -- 计算当前方块所在的逻辑x, y
     x, y = self:getPosition()
     local gridX = math.floor(x / self.blockWidth + 1 + minx)
     local gridY = math.floor(y / self.blockWidth + miny)
-    local fit  = false
-    local fitY = -1
+    local fit  = false -- 是否找到合适位置
+    local fitY = -1 -- 合适位置的y值
     for i = 1, #grids do
         fit = true
         for _, value in pairs(array) do
@@ -333,6 +210,7 @@ function BaseBlock:handleDown(grids, simulate)
         end
     end
 
+    -- 处理降落
     if fit then
         if not simulate then
             gridY = fitY
@@ -349,6 +227,70 @@ function BaseBlock:handleDown(grids, simulate)
     end
 
     return false
+end
+
+--------------------------------
+-- 获取格子的逻辑坐标
+-- @function [parent=#BaseBlock] getGridArray
+function BaseBlock:getGridArray()
+    local array = {}
+    local x, y = self.sprite1:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite1})
+
+    x, y = self.sprite2:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite2})
+
+    x, y = self.sprite3:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite3})
+
+    x, y = self.sprite4:getPosition()
+    table.insert(array, {x / self.blockWidth, y / self.blockWidth, self.sprite4})
+
+    return array
+end
+
+--------------------------------
+-- 获取格子的逻辑坐标(都是正数)
+-- @function [parent=#BaseBlock] getPositiveGridArray
+function BaseBlock:getPositiveGridArray()
+    local array = self:getGridArray()
+    local offsetX, offsetY = self:_getGridArrayOffSet(array)
+
+    if offsetX > 0 or offsetY > 0 then
+        for _, value in pairs(array) do
+            value[1] = value[1] + offsetX
+            value[2] = value[2] + offsetY
+        end
+    end
+
+    return array
+end
+
+--------------------------------
+-- 获取格子的负极值
+-- @function [parent=#BaseBlock] getPositiveGridArray
+function BaseBlock:_getGridArrayOffSet(array)
+    local minx = 0
+    local miny = 0
+    for _, value in pairs(array) do
+        if value[1] < minx then
+            minx = value[1]
+        end
+        if value[2] < miny then
+            miny = value[2]
+        end
+    end
+
+    local offsetX = 0
+    local offsetY = 0
+    if minx < 0 then
+        offsetX = -minx
+    end
+    if miny < 0 then
+        offsetY = -miny
+    end
+
+    return offsetX, offsetY, minx, miny
 end
 
 

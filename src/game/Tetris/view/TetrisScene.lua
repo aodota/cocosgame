@@ -82,14 +82,9 @@ function TetrisScene:onCreate()
     -- end
     self.nextBlock = self:createRandomBlock()
     -- 处理居中
-    local offsetx, offsety = self.nextBlock:getOffset()
+    local offsetx, offsety = self.nextBlock:getOffSet()
     self.nextBlock:setPosition(cc.p(offsetx + self.nextBlock.nextOffset, offsety))
     self.nextBg:addChild(self.nextBlock)
-
-
-    -- 处理长按
-
-
 end
 
 --------------------------------
@@ -143,7 +138,7 @@ function TetrisScene:next()
 
     self.nextBg:removeChild(self.nextBlock)
     self.nextBlock = self:createRandomBlock()
-    local offsetx, offsety = self.nextBlock:getOffset()
+    local offsetx, offsety = self.nextBlock:getOffSet()
  
     self.nextBlock:setPosition(cc.p(offsetx + self.nextBlock.nextOffset, offsety))
     self.nextBg:addChild(self.nextBlock)
@@ -355,7 +350,7 @@ function TetrisScene:_handleDown(block, simulate)
             if self.btnDownLow.longPress then
                 self.btnDownLow.ended = true
             end
-            local action = cc.Blink:create(0.8, 5)
+            local action = cc.Blink:create(0.5, 3)
             for _, block in pairs(removeBlocks) do
                 local sequence = cc.Sequence:create(action:clone(), cc.CallFunc:create(handler(self, self.removeCallBack), {sender = block}))
                 block:runAction(sequence)
@@ -370,6 +365,9 @@ function TetrisScene:_handleDown(block, simulate)
     
 end
 
+--------------------------------
+-- 处理移除回调
+-- @function [parent=#TetrisScene] removeCallBack
 function TetrisScene:removeCallBack(sender)
     log:info("remove callback sender:%s, callbackCount:%s, callbackNums:%s", sender, self.callbackCount, self.callbackNums)
     if sender then

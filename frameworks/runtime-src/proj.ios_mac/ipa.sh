@@ -17,8 +17,8 @@ project_name=$(ls | grep xcodeproj | awk -F.xcodeproj '{print $1}')
 cd $project_path
 # echo clean start ...
 # #删除bulid目录
-if  [ -d ${build_path} ];then
-    rm -rf ${build_path}
+if  [ -d ${build_path}/ipa-build ];then
+    rm -rf ${build_path}/ipa-build
     echo clean build_path success.
 fi
 # 清理工程
@@ -31,11 +31,6 @@ xcodebuild  -configuration Release \
 -project ${project_path}/${project_name}.xcodeproj \
 -target ${project_name}-mobile \
 CONFIGURATION_BUILD_DIR=${project_path}/build/Release-iphoneos
-
-# 删除ipa目录
-if [ -d ./ipa-build ];then
-    rm -rf ipa-build
-fi
 
 # 打包
 cd $build_path

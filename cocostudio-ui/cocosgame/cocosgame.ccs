@@ -80,8 +80,8 @@
         <Project Name="scrollTestPanel.csd" Type="Scene" />
         <Project Name="SliderTestScene.csd" Type="Scene" />
         <Project Name="TestLuaScene.csd" Type="Scene" />
-        <Project Name="TetrisScene.csd" Type="Scene" />
         <Project Name="TetrisNode.csd" Type="Node" />
+        <Project Name="TetrisScene.csd" Type="Scene" />
       </RootFolder>
     </Group>
   </SolutionFolder>

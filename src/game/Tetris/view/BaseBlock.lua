@@ -162,13 +162,10 @@ function BaseBlock:checkDown(grids)
         return true
     end
 
-    -- 从当前坐标开始检查
-    for i = gridY, #grids do
-        fit = true
-        for _, value in pairs(array) do
-            if grids[i + value[2]] ~= nil and grids[i + value[2]][gridX + value[1]] ~= 0 then
-                return true
-            end
+    -- 检查自己所处位置是否合法
+    for _, value in pairs(array) do
+        if grids[gridY + value[2]] ~= nil and grids[gridY + value[2]][gridX + value[1]] ~= 0 then
+            return true
         end
     end
 
@@ -182,9 +179,6 @@ function BaseBlock:handleDown(grids, simulate)
     -- 计算需要占用的格子
     local array = self:getPositiveGridArray()
     local offsetX, offsetY, minx, miny = self:_getGridArrayOffSet(self:getGridArray())
-
-    log:info("offsetX:%s, offsetY:%s, minx:%s, miny:%s", offsetX, offsetY, minx, miny)
-    log:info("array:%s", #array)
 
     -- 计算当前方块所在的逻辑x, y
     x, y = self:getPosition()

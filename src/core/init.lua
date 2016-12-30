@@ -46,7 +46,7 @@ cc.exports.net = require("core.net.init")
 
 -- game init
 cc.exports.rmgr = require "core.manager.ResourceManager".new()
-cc.exports.cmgr = require "core.manager.ConnectManager".new(true)
+cc.exports.cmgr = require "core.manager.ConnectManager".new(false)
 
 
 

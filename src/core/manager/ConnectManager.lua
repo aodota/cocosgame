@@ -85,7 +85,7 @@ function ConnectManger:send(action, callback, ...)
         return
     end
     
-    local args = string.format(action[2], ...)
+    local args = string.format(action.args, ...)
     local pack = ByteArray.new(ByteArray.ENDIAN_BIG)
     
     -- 写包长
@@ -95,8 +95,8 @@ function ConnectManger:send(action, callback, ...)
 --    log:info("args len %d", string.len(args))
     
     -- 写command，补齐32位
-    pack:writeString(action[1])
-    for i=string.len(action[1]) + 1, 32 do 
+    pack:writeString(action.command)
+    for i=string.len(action.command) + 1, 32 do 
         pack:writeByte(0)
     end
     -- 写RequestId
@@ -117,6 +117,35 @@ function ConnectManger:send(action, callback, ...)
     self.requestId = self.requestId + 1
     
 --    log:info("send data %s", pack:toString())
+end
+
+--------------------------------
+-- 添加推送callback
+-- @function [parent=#ConnectManger] addPushCallback
+function ConnectManger:addPushCallback(command, callback)
+    if self.pushCallback[command] == nil then
+        self.pushCallback[command] = {}
+    end
+
+    table.insert(self.pushCallback[command], callback)
+    log:info("add pushCallback %s %s", command, self.pushCallback[command])
+end
+
+--------------------------------
+-- 移除推送callback
+-- @function [parent=#ConnectManger] addPushCallback
+function ConnectManger:removePushCallback(command, callback)
+    local callbacks = self.pushCallback[command]
+    if nil == callbacks then
+        return
+    end
+
+    for index, _callback in pairs(callbacks) do
+        if _callback == callback then
+            table.remove(callbacks, index)
+            break
+        end
+    end
 end
 
 
@@ -164,7 +193,7 @@ end
 -- 创建连接
 -- @function [parent=#ConnectManger] tcpData 接受到TCP数据
 function ConnectManger:reciveDate(event)
-    log:info("recive data")
+    -- log:info("recive data")
     -- 心跳
     local currTime = os.time()
     if currTime - self._lastTime > HEART_BEAT_INTERVAL then
@@ -202,6 +231,11 @@ function ConnectManger:reciveDate(event)
     end
 end
 
+function trim(s) 
+    log:info("trim string %s", s)
+    return (string.gsub(s, "^\0*(.-)\0*$", "%1"))
+end
+
 --------------------------------
 -- 解码包
 -- @function [parent=#ConnectManger] decode 解码
@@ -221,9 +255,26 @@ function ConnectManger:decode()
     if self.compress then
         content,a,b,c = zlib.inflate()(content)
     end
+
+    -- 打印日志
+    -- command = string.trim(command, ' ')
+    command = string.format("%s", command)
+    -- log:info("recv command:%s, requestId:%d", command, requestId)
+    -- log:info("recv content:%s", content)
+
+    -- 转换为json
     local response = json.decode(content)
-    log:info("recv command:%s, requestId:%d", command, requestId)
-    log:showTable(response)
+
+    -- push推送
+    if requestId == 0 then
+        local callbacks = self.pushCallback[command]
+        if nil ~= callbacks then
+            for _, callback in pairs(callbacks) do
+                callback(response)
+            end
+        end
+        return
+    end
     
     -- 调用回调
     local callback = self.requestCallback[requestId]

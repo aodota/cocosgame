@@ -12,6 +12,9 @@ local EXPORTED_METHODS = {
     "dumpAllEventListeners",
 }
 
+-- 去除日志
+DEBUG = 0
+
 function Event:init_()
     self.target_ = nil
     self.listeners_ = {}

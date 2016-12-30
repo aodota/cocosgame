@@ -13,12 +13,11 @@ local Block4 = import(".Block4")
 local Block5 = import(".Block5")
 local Block6 = import(".Block6")
 local Block7 = import(".Block7")
-
+local fixScheduler = require "core.fixscheduler"
 --------------------------------
 -- 创建方法
 -- @function [parent=#TetrisScene] onCreate
 function TetrisScene:onCreate()
-    log:info("TetrisScene onCreate1112")
     local layout = require("layout.TetrisScene").create()
     self:fixLayout(layout)
 
@@ -40,6 +39,8 @@ function TetrisScene:onCreate()
     self.fixPixel = 3
     self.gameOver = false
     self.hang = 0
+    self.frameNum = 0
+    self.fixScheduler = fixScheduler.new(50)
 
     self:addObject(layout["root"], "scene")
     self.scoreText:setString("0")
@@ -47,7 +48,6 @@ function TetrisScene:onCreate()
 
     -- 添加事件
     self.btnShift:addClickEventListener(handler(self, self.handleShift))
-    -- self.btnShift:addLongPressEventListener(handler(self, self.handleShift), 0.1)
 
     self.btnLeft:addClickEventListener(handler(self, self.handleLeft))
     self.btnLeft:addLongPressEventListener(handler(self, self.handleLeft), 0.2)
@@ -61,7 +61,8 @@ function TetrisScene:onCreate()
     self.btnDownLow:addClickEventListener(handler(self, self.handleDownLow))
     self.btnDownLow:addLongPressEventListener(handler(self, self.handleDownLow), 0.1)
 
-    scheduler.scheduleGlobal(handler(self, self.doUpdate), 1)
+    self.fixScheduler:scheduleTask(handler(self, self.doUpdate), 1)
+    -- scheduler.scheduleGlobal(handler(self, self.doUpdate), 1)
 
     -- 初始化grid
     self:initGrid(378, 810)
@@ -112,13 +113,67 @@ function TetrisScene:doUpdate()
 end
 
 --------------------------------
+-- 获取玩家信息回调
+-- @function [parent=#TetrisScene] getPlayerInfo
+function TetrisScene:onGetPlayerInfo(response)
+    if response.state == 1 then
+        log:info("login succ")
+
+        -- 加入房间
+        cmgr:addPushCallback(actions.PUSH_FIGHT, handler(self, self.handlePush))
+        cmgr:send(actions.quitFight)
+        cmgr:send(actions.joinFight)
+       
+    end
+end
+
+--------------------------------
+-- 处理推送
+-- @function [parent=#TetrisScene] getPlayerInfo
+function TetrisScene:handlePush(response)
+    if response.data.schedule ~= nil then
+        cmgr:send(actions.readyFight)
+
+        self.btnPlay:setVisible(false)
+        self:reset()
+        self:next()
+    elseif response.data.event then
+        event = response.data.event
+        self.frameNum = event.frameNum
+
+        if not event.protos then
+            return
+        end
+        for _, data in pairs(event.protos) do
+            if data.protoId == 1 then
+                if data.keyCode == 1 then
+                    self:handleLeft()
+                elseif data.keyCode == 2 then
+                    self:handleRight()
+                elseif data.keyCode == 3 then
+                    self:handleShift()
+                elseif data.keyCode == 4 then
+                    self:handleDown()
+                elseif data.keyCode == 5 then
+                    self:handleDownLow()
+                end
+
+            end
+        end
+    end
+end
+
+--------------------------------
 -- 开始游戏
 -- @function [parent=#TetrisScene] playGame
 function TetrisScene:playGame()
-    self.btnPlay:setVisible(false)
+    -- 登录用户
+    cmgr:send(actions.getPlayerInfo, handler(self, self.onGetPlayerInfo))
 
-    self:reset()
-    self:next()
+    -- self.btnPlay:setVisible(false)
+
+    -- self:reset()
+    -- self:next()
 end
 
 --------------------------------
@@ -150,7 +205,7 @@ function TetrisScene:next()
     if self.downScheduler then
         scheduler.unscheduleGlobal(self.downScheduler)
         self.downScheduler = nil
-        scheduler.setTimeScale(1)
+        self.fixScheduler:setTimeScale(1)
     end
 end
 
@@ -198,10 +253,15 @@ end
 --------------------------------
 -- 处理翻转
 -- @function [parent=#TetrisScene] handleShift
-function TetrisScene:handleShift()
+function TetrisScene:handleShift(event)
     if self.block == nil then
         return
     else
+        if event ~= nil then
+            cmgr:send(actions.addInputFight, nil, self.frameNum, 3)
+            return
+        end
+
         local x, y = self.block:getPosition()
         -- self.vrblock:setPosition(cc.p(x, y))
 
@@ -228,8 +288,13 @@ end
 --------------------------------
 -- 处理左移动
 -- @function [parent=#TetrisScene] handleLeft
-function TetrisScene:handleLeft()
+function TetrisScene:handleLeft(event)
     if self.block == nil then
+        return
+    end
+
+    if event ~= nil then
+        cmgr:send(actions.addInputFight, nil, self.frameNum, 1)
         return
     end
 
@@ -244,8 +309,13 @@ end
 --------------------------------
 -- 处理右移动
 -- @function [parent=#TetrisScene] handleRight
-function TetrisScene:handleRight()
+function TetrisScene:handleRight(event)
     if self.block == nil then
+        return
+    end
+
+    if event ~= nil then
+        cmgr:send(actions.addInputFight, nil, self.frameNum, 2)
         return
     end
 
@@ -260,8 +330,13 @@ end
 --------------------------------
 -- 处理极速下降
 -- @function [parent=#TetrisScene] handleDown
-function TetrisScene:handleDown()
+function TetrisScene:handleDown(event)
     if self.block == nil then
+        return
+    end
+
+    if nil ~= event then
+        cmgr:send(actions.addInputFight, nil, self.frameNum, 4)
         return
     end
 
@@ -272,24 +347,28 @@ end
 --------------------------------
 -- 处理加速下降
 -- @function [parent=#TetrisScene] handleDownLow
-function TetrisScene:handleDownLow()
-    if self.downScheduler then
-        scheduler.unscheduleGlobal(self.downScheduler)
-        self.downScheduler = nil
-        scheduler.setTimeScale(1) 
-    elseif self.btnDownLow.ended and self.btnDownLow.longPressTrigger then
+function TetrisScene:handleDownLow(event)
+    log:info("handleDownLow:%s", event)
+    if nil ~= event then
+        cmgr:send(actions.addInputFight, nil, self.frameNum, 5)
         return
     end
 
+    if self.downScheduler then
+        scheduler.unscheduleGlobal(self.downScheduler)
+        self.downScheduler = nil
+        scheduler.setTimeScale(1)
+    end
+
     -- 加速
-    scheduler.setTimeScale(20)
+    self.fixScheduler:setTimeScale(20)
     self.downInterval = 0
 
     -- 计时间
     self.downScheduler = scheduler.scheduleUpdateGlobal(function(dt) 
         self.downInterval = self.downInterval + dt
-        if not self.btnDownLow.longPress and self.downInterval > 2 then
-            scheduler.setTimeScale(1)
+        if not self.btnDownLow.longPress and self.downInterval > 0.1 then
+            self.fixScheduler:setTimeScale(1)
             scheduler.unscheduleGlobal(self.downScheduler)
             self.downScheduler = nil
         end

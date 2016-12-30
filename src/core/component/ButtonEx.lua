@@ -19,6 +19,11 @@ function Button.onTouch(target, event)
         end
     elseif event == ccui.TouchEventType.canceled or event == ccui.TouchEventType.ended then
         target:setScale(1)
+
+        -- 判断是否触发点击事件
+        if event == ccui.TouchEventType.ended and not target.longPress and target.clickEventListener then
+            target.clickEventListener({target=target, longPress=false})
+        end
         
         -- 结束点击，取消全局监听器
         if target.scheduler then
@@ -37,8 +42,7 @@ function Button:onLongPress()
         self.tick = self.tick + longPressCheckInterval
         if self.tick >= self.longPressInterval then
             self.longPress = true
-            self.longPressTrigger = true
-            self.longPressListener()
+            self.longPressListener({target=self, longPress=true})
         end
     end
 end
@@ -51,4 +55,11 @@ function Button:addLongPressEventListener(listener, interval)
     interval = interval or 1
     self.longPressListener = listener
     self.longPressInterval = interval
+end
+
+--------------------------------
+-- 添加长按监听事件
+-- @function [parent=#Button] addLongPressEventListener
+function Button:addClickEventListener(listener)
+    self.clickEventListener = listener
 end

@@ -197,7 +197,7 @@ end
 -- if connection is initiative, do not reconnect
 function SocketTCP:_reconnect(__immediately)
 	if not self.isRetryConnect then return end
-	printInfo("%s._reconnect", self.name)
+	-- printInfo("%s._reconnect", self.name)
 	if __immediately then self:connect() return end
 	if self.reconnectScheduler then scheduler.unscheduleGlobal(self.reconnectScheduler) end
 	local __doReConnect = function ()

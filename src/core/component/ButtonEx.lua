@@ -22,11 +22,14 @@ function Button.onTouch(target, event)
 
         -- 判断是否触发点击事件
         if event == ccui.TouchEventType.ended and not target.longPress and target.clickEventListener then
-            target.clickEventListener({target=target, longPress=false})
+            target.clickEventListener({target=target, type="click"})
         end
         
-        -- 结束点击，取消全局监听器
+        -- 结束点击，取消长按监听器
         if target.scheduler then
+            if target.longPress then
+                target.longPressListener({target=target, type="longPress", longPress=false})
+            end
             target.ended = true
             target.longPress = false
             scheduler.unscheduleGlobal(target.scheduler)
@@ -42,7 +45,7 @@ function Button:onLongPress()
         self.tick = self.tick + longPressCheckInterval
         if self.tick >= self.longPressInterval then
             self.longPress = true
-            self.longPressListener({target=self, longPress=true})
+            self.longPressListener({target=self, type="longPress", longPress=true})
         end
     end
 end

@@ -11,7 +11,8 @@ local Layers = {
     background = 2,               -- 背景层
     scene = 3,                    -- 场景层
     ui = 4,                       -- ui层
-    modal = 5                     -- 模态层
+    tips = 5,                     -- 消息提示层
+    modal = 6                     -- 模态层
 }
 
 return Layers

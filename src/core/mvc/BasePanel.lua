@@ -63,6 +63,18 @@ function BasePanel:showWithUI()
 end
 
 --------------------------------
+-- 修正Layout布局
+-- @param layout obj layout对象
+-- @function [parent=#BasePanel] fixLayout
+function BasePanel:fixLayout(layout)
+    local panel = layout["panel"]
+    if panel then
+        panel:setAnchorPoint(0.5, 0.5)
+        panel:setPosition(display.cx, display.cy)
+    end
+end
+
+--------------------------------
 -- 设置递归设置透明度
 -- @function [parent=#BasePanel] setCascadeOpacityEnabled
 function BasePanel:setCascadeOpacityEnabled(value)

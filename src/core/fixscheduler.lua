@@ -29,6 +29,13 @@ function ScheduleTask:update(dt, callbackdt)
     end
 end
 
+--------------------------------
+-- 重置GameTime
+-- @function [parent=#ScheduleTask] resetGameTime
+function ScheduleTask:resetGameTime()
+    self.gameTime = 0
+end
+
 -- 固定帧率定时器
 local fixscheduler = class("fixscheduler")
 
@@ -47,8 +54,9 @@ end
 
 --------------------------------
 -- 添加定时任务
--- @function [parent=#fixscheduler] scheduler
+-- @function [parent=#fixscheduler] scheduleTask
 function fixscheduler:scheduleTask(callback, interval)
+    interval = interval or self.callbackdt
     local _interval = interval * 1000
     _interval = math.max(self.dt, _interval)
 
@@ -59,7 +67,7 @@ end
 
 --------------------------------
 -- 移除定时任务
--- @function [parent=#fixscheduler] scheduler
+-- @function [parent=#fixscheduler] unscheduleTask
 function fixscheduler:unscheduleTask(task)
     for index, value in pairs(self.schedulers) do
         if value == task then
@@ -80,7 +88,7 @@ function fixscheduler:update()
 
     if (self.gameTime >= self.dt) then
         self.gameTime = self.gameTime - self.dt
-        self:doUpdate(self.dt, self.callbackdt)
+        self:doUpdate(self.dt * self.timeScale, self.callbackdt)
     end
     self.currTime = currTime
 end
@@ -99,6 +107,14 @@ end
 -- @function [parent=#fixscheduler] setTimeScale
 function fixscheduler:setTimeScale(scale)
     self.timeScale = scale
+    self.gameTime = 0
+    for _, task in pairs(self.schedulers) do
+        task:resetGameTime()
+    end
+end
+
+function fixscheduler:destroy()
+    scheduler.unscheduleGlobal(self.scheduler)
 end
 
 return fixscheduler

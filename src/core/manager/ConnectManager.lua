@@ -13,6 +13,7 @@ local HEART_BEAT_INTERVAL = 60
 -- zlib解压缩
 local zlib = require("zlib")
 local ByteArray = utils.ByteArray
+local Tips = require "game.Common.Tips"
 
 --------------------------------
 -- 构造函数
@@ -28,6 +29,9 @@ function ConnectManger:ctor(compress)
 
     -- 推送回调
     self.pushCallback = {}
+
+    -- 连接状态回调
+    self.connCallback = {}
 
     -- 计时
     self._lastTime = os.time()
@@ -84,15 +88,13 @@ function ConnectManger:send(action, callback, ...)
         log:info("网络未连接")
         return
     end
-    
+
     local args = string.format(action.args, ...)
     local pack = ByteArray.new(ByteArray.ENDIAN_BIG)
-    
+
     -- 写包长
     local dataLen = 32 + 4 + string.len(args)
     pack:writeInt(dataLen)
-    
---    log:info("args len %d", string.len(args))
     
     -- 写command，补齐32位
     pack:writeString(action.command)
@@ -115,8 +117,7 @@ function ConnectManger:send(action, callback, ...)
     
     -- requestId递增
     self.requestId = self.requestId + 1
-    
---    log:info("send data %s", pack:toString())
+    -- log:info("send data %s %s", action.command, #args)
 end
 
 --------------------------------
@@ -128,7 +129,24 @@ function ConnectManger:addPushCallback(command, callback)
     end
 
     table.insert(self.pushCallback[command], callback)
-    log:info("add pushCallback %s %s", command, self.pushCallback[command])
+end
+
+--------------------------------
+-- 添加连接事件回调
+-- @function [parent=#ConnectManger] addConnCallback
+function ConnectManger:addConnCallback(callback)
+    table.insert(self.connCallback, callback)
+end
+
+--------------------------------
+-- 移除连接事件回调
+-- @function [parent=#ConnectManger] removeConnCallback
+function ConnectManger:removeConnCallback(callback)
+    for index, value in pairs(self.connCallback) do
+        if value == callback then
+            table.remove(self.connCallback, index)
+        end
+    end
 end
 
 --------------------------------
@@ -148,12 +166,32 @@ function ConnectManger:removePushCallback(command, callback)
     end
 end
 
+--------------------------------
+-- 关闭连接
+-- @function [parent=#ConnectManger] close
+function ConnectManger:close()
+    self.socket:close()
+end
+
+--------------------------------
+-- 判断网络是否连接
+-- @function [parent=#ConnectManger] isConnected
+function ConnectManger:isConnected() 
+    if not self.socket then
+        return false
+    end
+    return self.socket.isConnected
+end
 
 --------------------------------
 -- 关闭连接
 -- @function [parent=#ConnectManger] tcpClose
 function ConnectManger:tcpClose(event)
     log:info("tcp closed")
+    local event = {type="close", status="begin"}
+    for _, callback in pairs(self.connCallback) do
+        callback(event)
+    end
 end
 
 --------------------------------
@@ -161,6 +199,10 @@ end
 -- @function [parent=#ConnectManger] tcpClose
 function ConnectManger:tcpClosed(event)
     log:info("tcp closed")
+    local event = {type="close", status="succ"}
+    for _, callback in pairs(self.connCallback) do
+        callback(event)
+    end
 end
 
 --------------------------------
@@ -168,18 +210,10 @@ end
 -- @function [parent=#ConnectManger] tcpClose
 function ConnectManger:tcpConnected(event)
     log:info("tcp connect succ")
---    local actions = {}
---    actions.heartbeat = {"system@heartbeat", "userName=%s"}
---    self:send(actions.heartbeat, 
---    function(response) 
---        log:info("回调执行1")
---        log:showTable(response)
---    end, "你好")
---    self:send(actions.heartbeat, nil, "你好")
---    self:send(actions.heartbeat, function(response) 
---        log:info("回调执行2")
---        log:showTable(response)
---    end, "你好")
+    local event = {type="conn", status="succ"}
+    for _, callback in pairs(self.connCallback) do
+        callback(event)
+    end
 end
 
 --------------------------------
@@ -187,6 +221,10 @@ end
 -- @function [parent=#ConnectManger] tcpClose
 function ConnectManger:tcpConnectedFail(event)
     log:info("tcp connect fail")
+    local event = {type="conn", status="fail"}
+    for _, callback in pairs(self.connCallback) do
+        callback(event)
+    end
 end
 
 --------------------------------
@@ -231,9 +269,8 @@ function ConnectManger:reciveDate(event)
     end
 end
 
-function trim(s) 
-    log:info("trim string %s", s)
-    return (string.gsub(s, "^\0*(.-)\0*$", "%1"))
+function trim(s)
+    return string.gsub(s, '%z', "")
 end
 
 --------------------------------
@@ -257,14 +294,12 @@ function ConnectManger:decode()
     end
 
     -- 打印日志
-    -- command = string.trim(command, ' ')
-    command = string.format("%s", command)
+    command = trim(command)
     -- log:info("recv command:%s, requestId:%d", command, requestId)
     -- log:info("recv content:%s", content)
-
     -- 转换为json
     local response = json.decode(content)
-
+    
     -- push推送
     if requestId == 0 then
         local callbacks = self.pushCallback[command]
@@ -277,9 +312,18 @@ function ConnectManger:decode()
     end
     
     -- 调用回调
-    local callback = self.requestCallback[requestId]
-    if callback then
-        callback(response)
+    if response.state == 1 then
+        local callback = self.requestCallback[requestId]
+        if callback then
+            callback(response)
+            self.requestCallback[requestId] = nil
+        end
+    else
+        self.requestCallback[requestId] = nil
+        local msg = response.data.msg
+        if msg then
+            Tips.showSceneTips(msg, 1)
+        end
     end
 end
 

@@ -20,6 +20,7 @@
           <Image Name="BugSpider.png" />
           <Image Name="ExitButton.png" />
           <Image Name="HelloWorld.png" />
+          <Image Name="input_bg.png" />
           <Image Name="PlaySceneBg.jpg" />
           <Image Name="RadioButtonOff.png" />
           <Image Name="RadioButtonOffDisabled.png" />
@@ -71,6 +72,7 @@
           </Folder>
         </Folder>
         <Project Name="ButtonTestScene.csd" Type="Scene" />
+        <Project Name="CommTips.csd" Type="Node" />
         <Project Name="ListTestPanel.csd" Type="Scene" />
         <Project Name="LoadingPanel.csd" Type="Layer" />
         <Project Name="LoadingScene.csd" Type="Scene" />
@@ -80,8 +82,9 @@
         <Project Name="scrollTestPanel.csd" Type="Scene" />
         <Project Name="SliderTestScene.csd" Type="Scene" />
         <Project Name="TestLuaScene.csd" Type="Scene" />
-        <Project Name="TetrisNode.csd" Type="Node" />
         <Project Name="TetrisScene.csd" Type="Scene" />
+        <Project Name="TetrisScene_Net.csd" Type="Scene" />
+        <Project Name="TetrisMainScene.csd" Type="Scene" />
       </RootFolder>
     </Group>
   </SolutionFolder>

@@ -17,6 +17,18 @@ function RandomUtil:init()
 end
 
 --------------------------------
+-- 初始化方法
+-- @function [parent=#RandomUtil] init
+function RandomUtil:setRandomseed(randomseed)
+    -- 设置随机种子
+    log:info("init RandomUtil")
+    math.randomseed(randomseed)
+    log:info(math.random())
+    log:info(math.random())
+    log:info(math.random())
+end
+
+--------------------------------
 -- 随机一个指定范围的整数[1 - n]
 -- @function [parent=#RandomUtil] nextInt
 function RandomUtil:nextInt(n)

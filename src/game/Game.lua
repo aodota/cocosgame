@@ -32,15 +32,12 @@ function Game:startup()
     -- net.WebUtil.sendRequest("https://proxy-zjzr.aoshitang.com/root/version.action", function(data) 
     --     log:info("https echo:%s", data.data)
     -- end, "GET")
-
-    -- 进行连接
-    cmgr:open("127.0.0.1", 8010)
-
+    
     -- app暴露给全局
     cc.exports.app = self
     
     -- 切换到入口函数
-    self:changeScene("Tetris")
+    self:changeScene("Tetris", {true})
 end
 
 return Game

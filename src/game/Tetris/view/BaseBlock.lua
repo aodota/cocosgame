@@ -16,8 +16,9 @@ function BaseBlock:ctor(blockType, angle, min, max, pic)
     self.offsetRight = 0
     self.min = min
     self.max = max
-    self.pic = 'tetris/fangkuai' .. self.blockType .. '.png'
+    self.pic = 'tetris/fangkuai.png'
     self.nextOffset = 0
+    -- log:info("create BaseBlock max:%s", self.max)
 end
 
 --------------------------------
@@ -93,7 +94,7 @@ end
 function BaseBlock:handleRight(grids)
     local x, y = self:getPosition()
     local sx, sy = x, y
-    -- log:info("handleRight x:%s, y:%s, offsetX:%s, angle:%s", x, y, self.offsetRight, self.angle)
+    
     x = x + self.blockWidth
     local max = self.max + self.offsetRight
     -- if max < self.max then
@@ -104,6 +105,7 @@ function BaseBlock:handleRight(grids)
         x = max
     end
     
+    -- log:info("handleRight x:%s, y:%s, offsetX:%s, max:%s", x, y, self.offsetRight, max)
     self:setPosition(cc.p(x, y))
     if self:checkCollision(grids) then
         -- 不可以移动了

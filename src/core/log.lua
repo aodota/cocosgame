@@ -106,8 +106,14 @@ function Log:error(fmt, ...)
     if self.logLevel > Log.ERROR then
         return
     end
+
+   
+
     local log = self:formatLog("ERROR", fmt, ...)
     print(log)
+
+    cmgr:send(actions.writeLog, nil, log)
+    
 end
 
 --------------------------------

@@ -48,6 +48,9 @@ cc.exports.net = require("core.net.init")
 cc.exports.rmgr = require "core.manager.ResourceManager".new()
 cc.exports.cmgr = require "core.manager.ConnectManager".new(false)
 
+-- 初始化Actions
+require "game.Net.Actions"
+
 
 
 

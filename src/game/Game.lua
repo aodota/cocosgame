@@ -26,18 +26,14 @@ function Game:startup()
     -- 游戏core初始化
     require "core.init"
 
-    -- 初始化Actions
-    require "game.Net.Actions"
-
-    -- net.WebUtil.sendRequest("https://proxy-zjzr.aoshitang.com/root/version.action", function(data) 
-    --     log:info("https echo:%s", data.data)
-    -- end, "GET")
+    -- 游戏game初始化
+    require "game.init"
     
     -- app暴露给全局
     cc.exports.app = self
     
     -- 切换到入口函数
-    self:changeScene("Tetris", {true})
+    self:changeScene("Tetris")
 end
 
 return Game

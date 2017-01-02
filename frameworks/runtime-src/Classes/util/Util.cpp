@@ -13,7 +13,7 @@ using namespace std;
 // 获取当前系统时间
 int64_t Util::getCurrentTime()
 {
-    auto now = std::chrono::system_clock::now();
+    auto now = std::chrono::steady_clock::now();
     return  std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
 }
 

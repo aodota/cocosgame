@@ -32,14 +32,10 @@ function Tetris:ctor(bg, isNet, isSelf, parent)
     self.gameOver = false
     self.hang = 0
     self.removeLineNums = 0
-    self.frameNum = 0
     self.disableDown = false
     self.randomTimes = 1
     self.block = nil
     self.nextBlock = nil
-
-    -- 设置定时器
-    self.fixScheduler = require "core.fixscheduler".new(0.05)
 end
 
 --------------------------------
@@ -69,18 +65,47 @@ end
 --------------------------------
 -- 处理推送
 -- @function [parent=#Tetris] getPlayerInfo
-function Tetris:handlePush(data)
-    if data.keyCode == 1 or data.keyCode == 11 or data.keyCode == 12 then
-        self:handleLeft(nil, data.keyCode)
-    elseif data.keyCode == 2 or data.keyCode == 21 or data.keyCode == 22 then
-        self:handleRight(nil, data.keyCode)
-    elseif data.keyCode == 3 then
-        self:handleShift(nil, data.keyCode)
-    elseif data.keyCode == 4 then
-        self:handleDown(nil, data.keyCode)
-    elseif data.keyCode == 5 or data.keyCode == 51 or data.keyCode == 52 then
-        self:handleDownLow(nil, data.keyCode)
+function Tetris:handleServerFrame(eventList)
+    for _, data in pairs(eventList) do
+        if data.protoId == 1 then
+            if data.keyCode == 1 or data.keyCode == 11 or data.keyCode == 12 then
+                self:handleLeft(nil, data.keyCode)
+            elseif data.keyCode == 2 or data.keyCode == 21 or data.keyCode == 22 then
+                self:handleRight(nil, data.keyCode)
+            elseif data.keyCode == 3 then
+                self:handleShift(nil, data.keyCode)
+            elseif data.keyCode == 4 then
+                self:handleDown(nil, data.keyCode)
+            elseif data.keyCode == 5 or data.keyCode == 51 or data.keyCode == 52 then
+                self:handleDownLow(nil, data.keyCode)
+            end
+        elseif data.protoId == 3 then
+            self:addLines(data.lines)
+        end
     end
+end
+
+--------------------------------
+-- 更新服务器帧数
+-- @function [parent=#Tetris] updateServerFrameNum
+function Tetris:updateServerFrameNum(frameNum)
+    if self.fixScheduler then
+        self.fixScheduler:updateServerFrameNum(frameNum)
+    end
+end
+
+--------------------------------
+-- 添加服务器网络帧内容
+-- @function [parent=#Tetris] addServerFrame
+function Tetris:addServerFrame(frameNum, event)
+    self.fixScheduler:addServerFrame(frameNum, event)
+end
+
+--------------------------------
+-- 获取本地帧号
+-- @function [parent=#Tetris] getLocalFrameNum
+function Tetris:getLocalFrameNum()
+    return self.fixScheduler.frameNum
 end
 
 
@@ -140,7 +165,12 @@ function Tetris:gameStart()
         self:createNextBlock()
     end
 
-    -- 添加定时器
+    -- 设置定时器
+    self.fixScheduler = require "core.fixscheduler".new(0.05)
+    self.fixScheduler:addServerFrameHandler(handler(self, self.handleServerFrame))
+    if not self.isNet then
+        self.fixScheduler:updateServerFrameNum(-1)
+    end
     self.updateTask = self.fixScheduler:scheduleTask(handler(self, self.doUpdate), 1)
 
     -- 回合开始
@@ -153,8 +183,10 @@ end
 function Tetris:reset() 
     -- 停止定时任务
     if self.updateTask then
+        self.fixScheduler:destroy()
         self.fixScheduler:unscheduleTask(self.updateTask)
         self.updateTask = nil
+        self.fixScheduler = nil
     end
 
     -- 移除所有方块内容
@@ -170,7 +202,6 @@ function Tetris:reset()
     self.gameOver = false
     self.hang = 0
     self.removeLineNums = 0
-    self.frameNum = 0
     self.disableDown = false
     self.randomTimes = 1
     self.block = nil
@@ -211,7 +242,7 @@ function Tetris:handleShift(event, keyCode)
     else
         -- 发送玩家按钮事件
         if event ~= nil and self.isNet then
-            cmgr:send(actions.addInputFight, nil, self.frameNum, 3)
+            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 3)
             return
         end
 
@@ -242,7 +273,7 @@ function Tetris:handleLeft(event, keyCode)
         end
 
         if self.isNet then
-            cmgr:send(actions.addInputFight, nil, self.frameNum, keyCode)
+            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), keyCode)
             return
         end
     end
@@ -279,7 +310,7 @@ function Tetris:handleRight(event, keyCode)
         end
 
         if self.isNet then
-            cmgr:send(actions.addInputFight, nil, self.frameNum, keyCode)
+            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), keyCode)
             return
         end
     end
@@ -305,7 +336,7 @@ function Tetris:handleDown(event, keyCode)
     end
 
     if nil ~= event and self.isNet then
-        cmgr:send(actions.addInputFight, nil, self.frameNum, 4)
+        cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 4)
         return
     end
 
@@ -330,7 +361,7 @@ function Tetris:handleDownLow(event, keyCode)
         end
 
         if self.isNet then
-            cmgr:send(actions.addInputFight, nil, self.frameNum, keyCode)
+            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), keyCode)
             return
         end
     end
@@ -506,7 +537,7 @@ function Tetris:addLines(lines)
                     block:setPosition(cc.p(x, y + self.blockWidth * num))
                     self.grids[i][j] = 0
                     self.grids[i + num][j] = block
-                else
+                elseif not tolua.isnull(block) then
                     block:removeFromParent()
                 end
             end

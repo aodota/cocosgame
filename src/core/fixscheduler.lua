@@ -46,10 +46,17 @@ function fixscheduler:ctor(dt)
     self.dt = dt * 1000
     self.callbackdt = dt
     self.gameTime = 0
+    self.fixTime = 0
     self.currTime = cc.Util:getCurrentTime()
     self.scheduler = scheduler.scheduleUpdateGlobal(handler(self, self.update))
     self.schedulers = {}
     self.timeScale = 1
+    self.frameNum = 0
+    self.serverFrameNum = 0
+    self.serverFrame = {}
+    self.serverFrameHandler = nil
+    self.fillFrame = 0 -- 补充帧
+    self.fixTimeScale = 1
 end
 
 --------------------------------
@@ -79,18 +86,95 @@ function fixscheduler:unscheduleTask(task)
 end
 
 --------------------------------
+-- 添加网络帧handler
+-- @function [parent=#fixscheduler] addServerFrameHandler
+function fixscheduler:addServerFrameHandler(handler)
+    self.serverFrameHandler = handler
+end
+
+--------------------------------
+-- 更新网络帧频
+-- @function [parent=#fixscheduler] updateServerFrameNum
+function fixscheduler:updateServerFrameNum(frameNum)
+    self.serverFrameNum = frameNum
+    if self.timeScale > 1 and self.serverFrameNum > 0 then
+        self.fillFrame = self.timeScale - 1
+    end
+end
+
+--------------------------------
+-- 添加网络帧内容
+-- @function [parent=#fixscheduler] addServerFrame
+function fixscheduler:addServerFrame(frameNum, event)
+    if self.serverFrameHandler == nil then
+        return
+    end
+
+    if not self.serverFrame[frameNum] then
+        self.serverFrame[frameNum] = {}
+    end
+    table.insert(self.serverFrame[frameNum], event)
+    -- if event.protoId == 1 and event.keyCode == 51 then
+    --     log:info("addServerFrame keyCode 51 frameNum:%s", frameNum)
+    -- end
+end
+
+--------------------------------
 -- 更新操作
 -- @function [parent=#fixscheduler] update
 function fixscheduler:update()
+    if self.serverFrameNum ~= -1 
+        and self.frameNum >= self.serverFrameNum
+        and self.fillFrame <= 0 then
+         -- 等待网络帧频
+         self.currTime = cc.Util:getCurrentTime()
+         self.gameTime = self.dt
+         self.fixTime = self.dt
+         return
+    end
+
     local currTime = cc.Util:getCurrentTime()
     local _dt = currTime - self.currTime
-    self.gameTime = self.gameTime + (_dt * self.timeScale)
+    local timeScale = self.timeScale * self.fixTimeScale
+
+    self.gameTime = self.gameTime + (_dt * timeScale) -- 显示帧率
+    self.fixTime = self.fixTime + (_dt * self.fixTimeScale) -- 固定帧率
 
     if (self.gameTime >= self.dt) then
+        -- 补充帧处理
+        if self.fillFrame > 0 then
+            self.fillFrame = self.fillFrame - 1
+        end
         self.gameTime = self.gameTime - self.dt
-        self:doUpdate(self.dt * self.timeScale, self.callbackdt)
+
+        -- 本地帧 + 1
+        if self.fixTime >= self.dt then
+            self.frameNum = self.frameNum + 1
+            self.fixTime = self.fixTime - self.dt
+        end
+        
+        -- if self.fillFrame > 0 then
+            -- log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
+        -- end
+        -- 帧循环
+        self:doUpdate(self.dt * timeScale, self.callbackdt)
+
+        -- 处理服务器网络返回
+        self:doServerFrame()
     end
     self.currTime = currTime
+
+    -- 加速追帧
+    local diff = self.serverFrameNum - self.frameNum
+    -- if diff > 1 then
+    --     log:info("frame diff :%s", diff)
+    --     log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
+    -- end
+    if diff < 4 then
+        self.fixTimeScale = 1
+    else
+        self.fixTimeScale = 5
+    end
 end
 
 --------------------------------
@@ -103,11 +187,27 @@ function fixscheduler:doUpdate(dt, callbackdt)
 end
 
 --------------------------------
+-- 处理网络帧
+-- @function [parent=#fixscheduler] doServerFrame
+function fixscheduler:doServerFrame()
+    if nil == self.serverFrameHandler then
+        return
+    end
+
+    local eventList = self.serverFrame[self.frameNum]
+    if nil ~= eventList then
+        self.serverFrameHandler(eventList)
+    end
+    self.serverFrame[self.frameNum] = {}
+end
+
+--------------------------------
 -- 设置加速
 -- @function [parent=#fixscheduler] setTimeScale
 function fixscheduler:setTimeScale(scale)
     self.timeScale = scale
     self.gameTime = 0
+    self.fillFrame = 0
     for _, task in pairs(self.schedulers) do
         task:resetGameTime()
     end

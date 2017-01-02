@@ -276,6 +276,10 @@ end
 -- 解码包
 -- @function [parent=#ConnectManger] decode 解码
 function ConnectManger:decode()
+    if self._buff:getAvailable() < 4 then
+        return
+    end
+    
     local len = self._buff:readInt() -- 总长度
     if self._buff:getAvailable() < len then
         self._buff:setPos(self._buff:getPos() - 4)

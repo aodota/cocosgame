@@ -6,14 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 -- TetrisMultiPanel 俄罗斯方块
 local TetrisMultiPanel = class("TetrisMultiPanel", BasePanel)
-local Block1 = import(".Block1")
-local Block2 = import(".Block2")
-local Block3 = import(".Block3")
-local Block4 = import(".Block4")
-local Block5 = import(".Block5")
-local Block6 = import(".Block6")
-local Block7 = import(".Block7")
-local Tips = require "game.Common.Tips"
 local Tetris = import (".Tetris")
 local RandomUtil = require "core.util.RandomUtil"
 
@@ -21,7 +13,6 @@ local RandomUtil = require "core.util.RandomUtil"
 -- 创建方法
 -- @function [parent=#TetrisMultiPanel] onCreate
 function TetrisMultiPanel:onCreate(host)
-    log:info("TetrisMultiPanel onCreate host:%s", host)
     local layout = require("layout.TetrisScene_Net").create()
     self:fixLayout(layout)
     
@@ -84,21 +75,8 @@ end
 function TetrisMultiPanel:handleConnectEvent(event)
     if event.type == "conn" then
         if event.status == "fail" then
-            Tips.showSceneTips("不能建立与服务器的连接(～ o ～)~zZ", -1)
-            local scene = self:getScene()
-            local btn = ccui.Button:create()
-            btn:addTouchEventListener(btn.onTouch)
-            btn:setTitleText("返回主页")
-            btn:setTitleColor(cc.c3b(0, 128, 0))
-            btn:setTitleFontSize(48)
-            btn:addClickEventListener(
-                function()
-                    scene:popPanel(true)
-                end
-            )
-            local x, y = self.btnPlay:getPosition()
-            btn:setPosition(x, y + 100)
-            self:addChild(btn)
+            Tips.showSceneTips("不能建立与服务器的连接(～ o ～)~zZ", 2)
+            self:showHomeBtn(0, 0)
         elseif event.status == "succ" then
             Tips.showSceneTips("连接服务器成功", 1)
         end
@@ -113,12 +91,10 @@ end
 
 --------------------------------
 -- 获取玩家信息回调
--- @function [parent=#TetrisMultiPanel] getPlayerInfo
+-- @function [parent=#TetrisMultiPanel] onGetPlayerInfo
 function TetrisMultiPanel:onGetPlayerInfo(response)
     if response.state == 1 then
-        log:showTable(response)
         self.playerId = response.data.playerId
-        -- Tips.showTips(json.encode(response), self, -1)
         cmgr:send(actions.quitFight)
         cmgr:send(actions.joinFight)
     end
@@ -126,13 +102,12 @@ end
 
 --------------------------------
 -- 处理推送
--- @function [parent=#TetrisMultiPanel] getPlayerInfo
+-- @function [parent=#TetrisMultiPanel] handlePush
 function TetrisMultiPanel:handlePush(response)
     if tolua.isnull(self) then
         return
     end
 
-    -- Tips.showTips(json.encode(response), self, -1)
     if response.data.schedule ~= nil then
         log:info("send ready")
         cmgr:send(actions.readyFight)
@@ -155,8 +130,6 @@ function TetrisMultiPanel:handlePush(response)
                 self:gameStart(data)
             elseif data.protoId == 3 then
                 -- 增加行数
-                log:info("handle push addLines")
-                log:showTable(data)
                 if data.playerId == self.playerId then
                     self.tetris:addLines(data.lines)
                 else
@@ -172,6 +145,7 @@ end
 -- @function [parent=#TetrisMultiPanel] playGame
 function TetrisMultiPanel:playGame()
     if not cmgr:isConnected() then
+        Tips.showSceneTips("与服务器连接失败", 1)
         return
     end
     -- 登录用户
@@ -223,6 +197,11 @@ function TetrisMultiPanel:roundStart(oldNextBlock, newNextBlock)
     newNextBlock:setPosition(cc.p(offsetx + newNextBlock.nextOffset, offsety))
     self.nextBg:addChild(newNextBlock)
 
+    -- 解除长按状态
+    if self.tetris.btnDownLowLongPress then
+        cmgr:send(actions.addInputFight, nil, self.frameNum, 52)
+    end
+
     -- 按钮状态重置
     self.btnShift.ended = true
     self.btnLeft.ended = true
@@ -253,6 +232,12 @@ function TetrisMultiPanel:reset()
     self.nextBg:removeAllChildren()
     self.randomCache = {}
     self.scoreText:setString("0")
+    if self.btnHome then
+        if not tolua.isnull(self.btnHome) then
+            self.btnHome:removeFromParent()
+        end
+        self.btnHome = nil
+    end
 end
 
 --------------------------------
@@ -262,20 +247,7 @@ function TetrisMultiPanel:notifyGameOver(isSelf)
     if isSelf then
         self.btnPlay:setVisible(true)
 
-        local scene = self:getScene()
-        local btn = ccui.Button:create()
-        btn:addTouchEventListener(btn.onTouch)
-        btn:setTitleText("返回主页")
-        btn:setTitleColor(cc.c3b(0, 128, 0))
-        btn:setTitleFontSize(48)
-        btn:addClickEventListener(
-            function()
-                scene:popPanel(true)
-            end
-        )
-        local x, y = self.btnPlay:getPosition()
-        btn:setPosition(x, y - 100)
-        self:addChild(btn)
+        self:showHomeBtn(0, 0)
     end
 end
 
@@ -323,6 +295,31 @@ function TetrisMultiPanel:nextInt(range, times)
     end
     self.randomCache[times] = RandomUtil:nextInt(range)
     return self.randomCache[times]
+end
+
+--------------------------------
+-- 创建返回主页按钮
+-- @function [parent=#TetrisMultiPanel] showHomeBtn
+function TetrisMultiPanel:showHomeBtn(anchorX, anchorY)
+    if self.btnHome ~= nil and not tolua.isnull(self.btnHome) then
+        self.btnHome:removeFromParent()
+    end
+
+    local scene = self:getScene()
+    self.btnHome = ccui.Button:create()
+    self.btnHome:addTouchEventListener(self.btnHome.onTouch)
+    self.btnHome:setAnchorPoint(anchorX, anchorY)
+    self.btnHome:setTitleText("返回主页")
+    self.btnHome:setTitleColor(cc.c3b(30, 255, 0))
+    self.btnHome:setTitleFontSize(48)
+    self.btnHome:addClickEventListener(
+        function()
+            scene:popPanel(true)
+        end
+    )
+    local x, y = self.btnPlay:getPosition()
+    self.btnHome:setPosition(x, y - 100)
+    self:addChild(self.btnHome)
 end
 
 

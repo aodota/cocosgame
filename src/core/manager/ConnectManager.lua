@@ -13,7 +13,6 @@ local HEART_BEAT_INTERVAL = 60
 -- zlib解压缩
 local zlib = require("zlib")
 local ByteArray = utils.ByteArray
-local Tips = require "game.Common.Tips"
 
 --------------------------------
 -- 构造函数

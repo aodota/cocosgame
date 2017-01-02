@@ -6,7 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 -- TetrisScene 俄罗斯方块
 local TetrisScene = class("TetrisScene", BaseScene)
-local Tips = require "game.Common.Tips"
 
 --------------------------------
 -- 创建方法
@@ -22,7 +21,8 @@ function TetrisScene:onCreate()
     self.inputHost:setAnchorPoint(0.5, 0.5)
     self.inputHost:setPosition(125, 35)
     self.inputHost:setFontColor(cc.c3b(0, 128, 0))
-    self.inputHost:setText("192.168.1.4")
+    self.inputHost:setText("127.0.0.1")
+    self.inputHost:setInputMode(6)
     layout['bg_input']:addChild(self.inputHost)
     
 

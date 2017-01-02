@@ -6,14 +6,6 @@
 -- To change this template use File | Settings | File Templates.
 -- TetrisSinglePanel 俄罗斯方块
 local TetrisSinglePanel = class("TetrisSinglePanel", BasePanel)
-local Block1 = import(".Block1")
-local Block2 = import(".Block2")
-local Block3 = import(".Block3")
-local Block4 = import(".Block4")
-local Block5 = import(".Block5")
-local Block6 = import(".Block6")
-local Block7 = import(".Block7")
-local Tips = require "game.Common.Tips"
 local Tetris = import (".Tetris")
 local RandomUtil = require "core.util.RandomUtil"
 
@@ -133,6 +125,13 @@ function TetrisSinglePanel:reset()
     self.nextBg:removeAllChildren()
     self.randomCache = {}
     self.scoreText:setString("0")
+
+    if self.btnHome then
+        if not tolua.isnull(self.btnHome) then
+            self.btnHome:removeFromParent()
+        end
+        self.btnHome = nil
+    end
 end
 
 --------------------------------
@@ -141,20 +140,7 @@ end
 function TetrisSinglePanel:notifyGameOver(isSelf)
     self.btnPlay:setVisible(true)
 
-    local scene = self:getScene()
-    local btn = ccui.Button:create()
-    btn:addTouchEventListener(btn.onTouch)
-    btn:setTitleText("返回主页")
-    btn:setTitleColor(cc.c3b(0, 128, 0))
-    btn:setTitleFontSize(48)
-    btn:addClickEventListener(
-        function()
-            scene:popPanel(true)
-        end
-    )
-    local x, y = self.btnPlay:getPosition()
-    btn:setPosition(x, y - 100)
-    self:addChild(btn)
+    self:showHomeBtn(0, 0)
 end
 
 --------------------------------
@@ -201,6 +187,31 @@ function TetrisSinglePanel:nextInt(range, times)
     end
     self.randomCache[times] = RandomUtil:nextInt(range)
     return self.randomCache[times]
+end
+
+--------------------------------
+-- 创建返回主页按钮
+-- @function [parent=#TetrisSinglePanel] showHomeBtn
+function TetrisSinglePanel:showHomeBtn(anchorX, anchorY)
+    if self.btnHome ~= nil and not tolua.isnull(self.btnHome) then
+        self.btnHome:removeFromParent()
+    end
+
+    local scene = self:getScene()
+    self.btnHome = ccui.Button:create()
+    self.btnHome:addTouchEventListener(self.btnHome.onTouch)
+    self.btnHome:setAnchorPoint(anchorX, anchorY)
+    self.btnHome:setTitleText("返回主页")
+    self.btnHome:setTitleColor(cc.c3b(30, 255, 0))
+    self.btnHome:setTitleFontSize(48)
+    self.btnHome:addClickEventListener(
+        function()
+            scene:popPanel(true)
+        end
+    )
+    local x, y = self.btnPlay:getPosition()
+    self.btnHome:setPosition(x, y - 100)
+    self:addChild(self.btnHome)
 end
 
 

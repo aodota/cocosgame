@@ -42,6 +42,9 @@ end
 -- 每一帧运行
 -- @function [parent=#Tetris] playGame
 function Tetris:doUpdate()
+    -- if self.isSelf then
+        log:info("doUpdate frameNum:%s, timeScale:%s, isSelf:%s", self:getLocalFrameNum(), self.fixScheduler.timeScale, self.isSelf)
+    -- end
     if self.gameOver or self.disableDown then
         return
     end

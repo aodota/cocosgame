@@ -123,38 +123,34 @@ end
 -- 更新操作
 -- @function [parent=#fixscheduler] update
 function fixscheduler:update()
-    if self.serverFrameNum ~= -1 
-        and self.frameNum >= self.serverFrameNum
-        and self.fillFrame <= 0 then
-         -- 等待网络帧频
-         self.currTime = cc.Util:getCurrentTime()
-         self.gameTime = self.dt
-         self.fixTime = self.dt
-         return
-    end
+    
 
     local currTime = cc.Util:getCurrentTime()
     local _dt = currTime - self.currTime
-    local timeScale = self.timeScale * self.fixTimeScale
+    local timeScale = self.timeScale
 
     self.gameTime = self.gameTime + (_dt * timeScale) -- 显示帧率
-    self.fixTime = self.fixTime + (_dt * self.fixTimeScale) -- 固定帧率
 
+    -- 显示帧率更新
     if (self.gameTime >= self.dt) then
+        self.gameTime = self.gameTime - self.dt
+
         -- 补充帧处理
         if self.fillFrame > 0 then
             self.fillFrame = self.fillFrame - 1
         end
-        self.gameTime = self.gameTime - self.dt
-
-        -- 本地帧 + 1
-        if self.fixTime >= self.dt then
-            self.frameNum = self.frameNum + 1
-            self.fixTime = self.fixTime - self.dt
-        end
         
+        if self.serverFrameNum ~= -1 
+            and self.frameNum >= self.serverFrameNum
+            and self.fillFrame <= 0 then
+            -- 锁帧等待
+            return
+        elseif self.frameNum < self.serverFrameNum then
+            self.frameNum = self.frameNum + 1
+        end
+
         -- if self.fillFrame > 0 then
-            -- log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
+        --     log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
         -- end
         -- 帧循环
         self:doUpdate(self.dt * timeScale, self.callbackdt)
@@ -165,16 +161,16 @@ function fixscheduler:update()
     self.currTime = currTime
 
     -- 加速追帧
-    local diff = self.serverFrameNum - self.frameNum
+    -- local diff = self.serverFrameNum - self.frameNum
     -- if diff > 1 then
     --     log:info("frame diff :%s", diff)
     --     log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
     -- end
-    if diff < 4 then
-        self.fixTimeScale = 1
-    else
-        self.fixTimeScale = 5
-    end
+    -- if diff < 4 then
+    --     self.fixTimeScale = 1
+    -- else
+    --     self.fixTimeScale = 5
+    -- end
 end
 
 --------------------------------
@@ -194,6 +190,7 @@ function fixscheduler:doServerFrame()
         return
     end
 
+ 
     local eventList = self.serverFrame[self.frameNum]
     if nil ~= eventList then
         self.serverFrameHandler(eventList)

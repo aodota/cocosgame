@@ -338,8 +338,8 @@ function TetrisMultiPanel:onExit()
     tipLayer:removeAllChildren()
 
     -- 移除定时器
-    self.tetris.fixScheduler:destroy()
-    self.targetTetris.fixScheduler:destroy()
+    self.tetris:onExit()
+    self.targetTetris:onExit()
 end
 
 return TetrisMultiPanel

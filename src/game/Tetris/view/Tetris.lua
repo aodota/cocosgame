@@ -43,7 +43,7 @@ end
 -- @function [parent=#Tetris] playGame
 function Tetris:doUpdate()
     -- if self.isSelf then
-        log:info("doUpdate frameNum:%s, timeScale:%s, isSelf:%s", self:getLocalFrameNum(), self.fixScheduler.timeScale, self.isSelf)
+        log:info("doUpdate frameNum:%s, timeScale:%s, isSelf:%s, updateTime:%s, fixTime:%s", self:getLocalFrameNum(), self.fixScheduler.timeScale, self.isSelf, self.fixScheduler.updateTime, self.fixScheduler.fixTime)
     -- end
     if self.gameOver or self.disableDown then
         return
@@ -119,7 +119,7 @@ end
 -- 下一个方块
 -- @function [parent=#Tetris] roundStart
 function Tetris:roundStart() 
-    log:info("roundStart begin")
+    -- log:info("roundStart begin")
     local oldNextBlock = self.nextBlock
 
     -- 创建方块
@@ -166,7 +166,7 @@ end
 -- 游戏开始
 -- @function [parent=#Tetris] gameStart
 function Tetris:gameStart() 
-    log:info("[Tetris]gameStart")
+    -- log:info("[Tetris]gameStart")
 
     -- 随机下一块方块
     if nil == self.nextBlock then
@@ -374,7 +374,7 @@ function Tetris:handleDownLow(event, keyCode)
         end
     end
 
-    log:info("handleDownLow keyCode:%s", keyCode)
+    -- log:info("handleDownLow keyCode:%s", keyCode)
     -- 更新控制信息
     if keyCode == 5 then
         if self.downScheduler ~= nil then
@@ -382,23 +382,23 @@ function Tetris:handleDownLow(event, keyCode)
         end
 
         -- 加速
-        self.fixScheduler:setTimeScale(10)
+        self.fixScheduler:setTimeScale(25, 5)
         self.downInterval = 0
         self.btnDownLowLongPress = false
         
         -- 计时间
-        self.downScheduler = self.fixScheduler:scheduleTask(function() 
-            if not self.btnDownLowLongPress and self.downScheduler then
-                self.fixScheduler:unscheduleTask(self.downScheduler)
-                self.downScheduler = nil
+        -- self.downScheduler = self.fixScheduler:scheduleTask(function() 
+        --     if not self.btnDownLowLongPress and self.downScheduler then
+        --         self.fixScheduler:unscheduleTask(self.downScheduler)
+        --         self.downScheduler = nil
 
-                if self.isNet then
-                    cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 52)
-                else
-                    self.fixScheduler:setTimeScale(1)
-                end
-            end
-        end, 5)
+        --         if self.isNet then
+        --             cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 52)
+        --         else
+        --             self.fixScheduler:setTimeScale(1)
+        --         end
+        --     end
+        -- end, 5)
     elseif keyCode == 51 then
         if self.btnDownLowLongPress then
             return
@@ -406,7 +406,7 @@ function Tetris:handleDownLow(event, keyCode)
 
         -- 加速
         self.btnDownLowLongPress = true
-        self.fixScheduler:setTimeScale(10)
+        self.fixScheduler:setTimeScale(25, -1)
         self.downInterval = 0
     elseif keyCode == 52 then
         if self.downScheduler then
@@ -531,7 +531,7 @@ function Tetris:removeCallBack(sender)
     self.removeLineNums = 0
 
     -- 随机下一个
-    log:info("call roundStart")
+    -- log:info("call roundStart")
     -- if self.isNet then
     --     self.disableDown = true
     --     cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 100)
@@ -653,6 +653,15 @@ function Tetris:shake(node, interval)
             scheduler.unscheduleGlobal(schedulerHandle)
         end
     end)
+end
+
+--------------------------------
+-- 退出时清理操作
+-- @function [parent=#Tetris] onExit
+function Tetris:onExit()
+    if self.fixScheduler then
+        self.fixScheduler:destroy()
+    end
 end
 
 return Tetris

@@ -55,8 +55,9 @@ function fixscheduler:ctor(dt)
     self.serverFrameNum = 0
     self.serverFrame = {}
     self.serverFrameHandler = nil
-    self.fillFrame = 0 -- 补充帧
+    self.fillFrameNum = 0 -- 补充帧
     self.fixTimeScale = 1
+    self.updateTime = 0
 end
 
 --------------------------------
@@ -97,9 +98,9 @@ end
 -- @function [parent=#fixscheduler] updateServerFrameNum
 function fixscheduler:updateServerFrameNum(frameNum)
     self.serverFrameNum = frameNum
-    if self.timeScale > 1 and self.serverFrameNum > 0 then
-        self.fillFrame = self.timeScale - 1
-    end
+    -- if self.timeScale > 1 and self.serverFrameNum > 0 then
+    --     self.fillFrameNum = self.timeScale - 1
+    -- end
 end
 
 --------------------------------
@@ -114,66 +115,63 @@ function fixscheduler:addServerFrame(frameNum, event)
         self.serverFrame[frameNum] = {}
     end
     table.insert(self.serverFrame[frameNum], event)
-    if event.protoId == 1 and event.keyCode == 100 then
-        log:info("addServerFrame keyCode 100 frameNum:%s, localFrameNum:%s", frameNum, self.frameNum)
-    end
+    -- if event.protoId == 1 and event.keyCode == 100 then
+    --     -- log:info("addServerFrame keyCode 100 frameNum:%s, localFrameNum:%s", frameNum, self.frameNum)
+    -- end
 end
 
 --------------------------------
 -- 更新操作
 -- @function [parent=#fixscheduler] update
 function fixscheduler:update()
-    if self.serverFrameNum ~= -1 
-        and self.frameNum >= self.serverFrameNum
-        and self.fillFrame <= 0 then
-         -- 等待网络帧频
-         self.currTime = cc.Util:getCurrentTime()
-         self.gameTime = self.dt
-         self.fixTime = self.dt
-         return
-    end
-
     local currTime = cc.Util:getCurrentTime()
     local _dt = currTime - self.currTime
-    local timeScale = self.timeScale * self.fixTimeScale
 
-    self.gameTime = self.gameTime + (_dt * timeScale) -- 显示帧率
-    self.fixTime = self.fixTime + (_dt * self.fixTimeScale) -- 固定帧率
+    -- 逻辑帧率
+    self.fixTime = self.fixTime + (_dt * self.fixTimeScale)
+    self.updateTime = self.updateTime + 1
 
-    if (self.gameTime >= self.dt) then
-        -- 补充帧处理
-        if self.fillFrame > 0 then
-            self.fillFrame = self.fillFrame - 1
-        end
-        self.gameTime = self.gameTime - self.dt
-
-        -- 本地帧 + 1
-        if self.fixTime >= self.dt and self.frameNum < self.serverFrameNum then
+    -- 逻辑帧率驱动显示帧率
+    while (self.fixTime >= self.dt) do
+        self.fixTime = self.fixTime - self.dt
+        if self.serverFrameNum ~= -1 
+            and self.frameNum >= self.serverFrameNum
+            and self.fillFrameNum == 0 then
+            -- 锁帧等待
+            break
+        elseif self.frameNum < self.serverFrameNum then
             self.frameNum = self.frameNum + 1
-            self.fixTime = self.fixTime - self.dt
         end
-        
-        -- if self.fillFrame > 0 then
-            -- log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
-        -- end
-        -- 帧循环
-        self:doUpdate(self.dt * timeScale, self.callbackdt)
+
+        -- 加速帧处理
+        if self.fillFrameNum > 0 then
+            self.fillFrameNum = self.fillFrameNum - 1
+            if self.fillFrameNum == 0 then
+                self.timeScale = 1
+            end
+        end
+
+        -- 调用显示帧
+        for i=1, self.timeScale do
+            self:doUpdate(self.dt, self.callbackdt)
+        end
 
         -- 处理服务器网络返回
         self:doServerFrame()
     end
+
     self.currTime = currTime
 
     -- 加速追帧
     local diff = self.serverFrameNum - self.frameNum
-    if diff > 1 then
-        log:info("frame diff :%s", diff)
-        log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
-    end
+    -- if diff > 1 then
+    --     log:info("frame diff :%s", diff)
+    --     log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrameNum:%s", self.serverFrameNum, self.frameNum, self.fillFrameNum)
+    -- end
     -- if diff < 4 then
     --     self.fixTimeScale = 1
     -- else
-    --     self.fixTimeScale = 5
+    --     self.fixTimeScale = 10
     -- end
 end
 
@@ -194,6 +192,7 @@ function fixscheduler:doServerFrame()
         return
     end
 
+ 
     local eventList = self.serverFrame[self.frameNum]
     if nil ~= eventList then
         self.serverFrameHandler(eventList)
@@ -204,15 +203,25 @@ end
 --------------------------------
 -- 设置加速
 -- @function [parent=#fixscheduler] setTimeScale
-function fixscheduler:setTimeScale(scale)
+function fixscheduler:setTimeScale(scale, fillFrameNum)
     self.timeScale = scale
     self.gameTime = 0
-    self.fillFrame = 0
+    self.fixTime = 0
+
+    if scale > 1 then
+        self.fillFrameNum = fillFrameNum
+    else
+        self.fillFrameNum = 0
+    end
+    log:info("setTimeScale frameNum:%s, timeScale:%s", self.frameNum, scale)
     for _, task in pairs(self.schedulers) do
         task:resetGameTime()
     end
 end
 
+--------------------------------
+-- 销毁定时器
+-- @function [parent=#fixscheduler] setTimeScale
 function fixscheduler:destroy()
     scheduler.unscheduleGlobal(self.scheduler)
 end

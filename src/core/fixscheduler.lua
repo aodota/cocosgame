@@ -162,8 +162,8 @@ function fixscheduler:update()
 
     self.currTime = currTime
 
-    -- 加速追帧
-    local diff = self.serverFrameNum - self.frameNum
+    -- 加速追帧逻辑
+    -- local diff = self.serverFrameNum - self.frameNum
     -- if diff > 1 then
     --     log:info("frame diff :%s", diff)
     --     log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrameNum:%s", self.serverFrameNum, self.frameNum, self.fillFrameNum)
@@ -213,7 +213,7 @@ function fixscheduler:setTimeScale(scale, fillFrameNum)
     else
         self.fillFrameNum = 0
     end
-    log:info("setTimeScale frameNum:%s, timeScale:%s", self.frameNum, scale)
+    -- log:info("setTimeScale frameNum:%s, timeScale:%s", self.frameNum, scale)
     for _, task in pairs(self.schedulers) do
         task:resetGameTime()
     end

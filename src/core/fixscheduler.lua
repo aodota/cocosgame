@@ -114,9 +114,9 @@ function fixscheduler:addServerFrame(frameNum, event)
         self.serverFrame[frameNum] = {}
     end
     table.insert(self.serverFrame[frameNum], event)
-    -- if event.protoId == 1 and event.keyCode == 51 then
-    --     log:info("addServerFrame keyCode 51 frameNum:%s", frameNum)
-    -- end
+    if event.protoId == 1 and event.keyCode == 100 then
+        log:info("addServerFrame keyCode 100 frameNum:%s, localFrameNum:%s", frameNum, self.frameNum)
+    end
 end
 
 --------------------------------
@@ -148,7 +148,7 @@ function fixscheduler:update()
         self.gameTime = self.gameTime - self.dt
 
         -- 本地帧 + 1
-        if self.fixTime >= self.dt then
+        if self.fixTime >= self.dt and self.frameNum < self.serverFrameNum then
             self.frameNum = self.frameNum + 1
             self.fixTime = self.fixTime - self.dt
         end
@@ -166,15 +166,15 @@ function fixscheduler:update()
 
     -- 加速追帧
     local diff = self.serverFrameNum - self.frameNum
-    -- if diff > 1 then
-    --     log:info("frame diff :%s", diff)
-    --     log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
-    -- end
-    if diff < 4 then
-        self.fixTimeScale = 1
-    else
-        self.fixTimeScale = 5
+    if diff > 1 then
+        log:info("frame diff :%s", diff)
+        log:info("update frame serverFrameNum:%s, localFrameNum:%s, fillFrame:%s", self.serverFrameNum, self.frameNum, self.fillFrame)
     end
+    -- if diff < 4 then
+    --     self.fixTimeScale = 1
+    -- else
+    --     self.fixTimeScale = 5
+    -- end
 end
 
 --------------------------------

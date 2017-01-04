@@ -78,6 +78,9 @@ function Tetris:handleServerFrame(eventList)
                 self:handleDown(nil, data.keyCode)
             elseif data.keyCode == 5 or data.keyCode == 51 or data.keyCode == 52 then
                 self:handleDownLow(nil, data.keyCode)
+            elseif data.keyCode == 100 then
+                -- 回合开始
+                self:roundStart()
             end
         elseif data.protoId == 3 then
             self:addLines(data.lines)
@@ -113,6 +116,7 @@ end
 -- 下一个方块
 -- @function [parent=#Tetris] roundStart
 function Tetris:roundStart() 
+    log:info("roundStart begin")
     local oldNextBlock = self.nextBlock
 
     -- 创建方块
@@ -152,6 +156,7 @@ function Tetris:roundStart()
 
     -- 充值加速器状态
     self.fixScheduler:setTimeScale(1)
+    self.disableDown = false
 end
 
 --------------------------------
@@ -366,7 +371,7 @@ function Tetris:handleDownLow(event, keyCode)
         end
     end
 
-    -- log:info("handleDownLow keyCode:%s", keyCode)
+    log:info("handleDownLow keyCode:%s", keyCode)
     -- 更新控制信息
     if keyCode == 5 then
         if self.downScheduler ~= nil then
@@ -381,9 +386,14 @@ function Tetris:handleDownLow(event, keyCode)
         -- 计时间
         self.downScheduler = self.fixScheduler:scheduleTask(function() 
             if not self.btnDownLowLongPress and self.downScheduler then
-                self.fixScheduler:setTimeScale(1)
                 self.fixScheduler:unscheduleTask(self.downScheduler)
                 self.downScheduler = nil
+
+                if self.isNet then
+                    cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 52)
+                else
+                    self.fixScheduler:setTimeScale(1)
+                end
             end
         end, 5)
     elseif keyCode == 51 then
@@ -518,7 +528,14 @@ function Tetris:removeCallBack(sender)
     self.removeLineNums = 0
 
     -- 随机下一个
-    self:roundStart()
+    log:info("call roundStart")
+    -- if self.isNet then
+    --     self.disableDown = true
+    --     cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 100)
+    -- else
+        self:roundStart()
+    -- end
+    -- self:roundStart()
 end
 
 --------------------------------

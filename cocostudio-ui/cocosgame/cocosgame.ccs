@@ -13,7 +13,6 @@
             <PlistImageFile Name="PlaySceneBg.jpg" Key="PlaySceneBg.jpg" />
             <PlistImageFile Name="Star.png" Key="Star.png" />
           </PlistImageFolder>
-          <Folder Name="tetris" />
           <Image Name="BugAnt.png" />
           <Audio Name="BugDead.wav" />
           <Audio Name="BugEnterHole.wav" />
@@ -31,9 +30,6 @@
           <Image Name="SliderBar.png" />
           <Image Name="SliderButton.png" />
           <Image Name="Star.png" />
-        </Folder>
-        <Folder Name="tetris">
-          <Image Name="fangkuai.png" />
         </Folder>
         <Folder Name="ui">
           <Folder Name="button">
@@ -54,22 +50,6 @@
             <Image Name="slider_2.png" />
             <Image Name="slider_bg.png" />
           </Folder>
-          <Folder Name="tetris">
-            <Image Name="bg.png" />
-            <Image Name="bg_bk.png" />
-            <Image Name="del_line.png" />
-            <Image Name="down.png" />
-            <Image Name="down_fast.png" />
-            <Image Name="fangkuai.png" />
-            <Image Name="hang.png" />
-            <Image Name="left.png" />
-            <Image Name="NEXT.png" />
-            <Image Name="number.png" />
-            <Image Name="right.png" />
-            <Image Name="scene_bg.png" />
-            <Image Name="shift.png" />
-            <Image Name="small number.png" />
-          </Folder>
         </Folder>
         <Project Name="ButtonTestScene.csd" Type="Scene" />
         <Project Name="CommTips.csd" Type="Node" />
@@ -82,9 +62,6 @@
         <Project Name="scrollTestPanel.csd" Type="Scene" />
         <Project Name="SliderTestScene.csd" Type="Scene" />
         <Project Name="TestLuaScene.csd" Type="Scene" />
-        <Project Name="TetrisMainScene.csd" Type="Scene" />
-        <Project Name="TetrisScene.csd" Type="Scene" />
-        <Project Name="TetrisScene_Net.csd" Type="Scene" />
       </RootFolder>
     </Group>
   </SolutionFolder>

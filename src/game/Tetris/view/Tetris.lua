@@ -70,7 +70,8 @@ end
 -- @function [parent=#Tetris] getPlayerInfo
 function Tetris:handleServerFrame(eventList)
     for _, data in pairs(eventList) do
-        if data.protoId == 1 then
+        if data.protoId == protos.KEY_PRESS then
+            data.keyCode = tonumber(data.args)
             if data.keyCode == 1 or data.keyCode == 11 or data.keyCode == 12 then
                 self:handleLeft(nil, data.keyCode)
             elseif data.keyCode == 2 or data.keyCode == 21 or data.keyCode == 22 then
@@ -85,8 +86,9 @@ function Tetris:handleServerFrame(eventList)
                 -- 回合开始
                 self:roundStart()
             end
-        elseif data.protoId == 3 then
-            self:addLines(data.lines)
+        elseif data.protoId == protos.REMOVE_LINES then
+            log:showTable(data)
+            self:addLines(data.args)
         end
     end
 end
@@ -250,7 +252,7 @@ function Tetris:handleShift(event, keyCode)
     else
         -- 发送玩家按钮事件
         if event ~= nil and self.isNet then
-            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 3)
+            cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self:getLocalFrameNum(), 3)
             return
         end
 
@@ -281,7 +283,7 @@ function Tetris:handleLeft(event, keyCode)
         end
 
         if self.isNet then
-            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), keyCode)
+            cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self:getLocalFrameNum(), keyCode)
             return
         end
     end
@@ -318,7 +320,7 @@ function Tetris:handleRight(event, keyCode)
         end
 
         if self.isNet then
-            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), keyCode)
+            cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self:getLocalFrameNum(), keyCode)
             return
         end
     end
@@ -344,7 +346,7 @@ function Tetris:handleDown(event, keyCode)
     end
 
     if nil ~= event and self.isNet then
-        cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 4)
+        cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self:getLocalFrameNum(), 4)
         return
     end
 
@@ -369,7 +371,7 @@ function Tetris:handleDownLow(event, keyCode)
         end
 
         if self.isNet then
-            cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), keyCode)
+            cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self:getLocalFrameNum(), keyCode)
             return
         end
     end
@@ -393,7 +395,7 @@ function Tetris:handleDownLow(event, keyCode)
         --         self.downScheduler = nil
 
         --         if self.isNet then
-        --             cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 52)
+        --             cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self:getLocalFrameNum(), 52)
         --         else
         --             self.fixScheduler:setTimeScale(1)
         --         end
@@ -534,7 +536,7 @@ function Tetris:removeCallBack(sender)
     -- log:info("call roundStart")
     -- if self.isNet then
     --     self.disableDown = true
-    --     cmgr:send(actions.addInputFight, nil, self:getLocalFrameNum(), 100)
+    --     cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self:getLocalFrameNum(), 100)
     -- else
         self:roundStart()
     -- end

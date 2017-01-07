@@ -122,21 +122,21 @@ function TetrisMultiPanel:handlePush(response)
             return
         end
         for _, data in pairs(event.protos) do
-            if data.protoId == 1 then
+            if data.protoId == protos.KEY_PRESS then
                 if data.playerId == self.playerId then
                     self.tetris:addServerFrame(self.frameNum, data)
                 else
                     self.targetTetris:addServerFrame(self.frameNum, data)
                 end
-            elseif data.protoId == 2 then
+            elseif data.protoId == protos.FIGHT_START then
                 -- 战斗开始协议
                 self:gameStart(data)
-            elseif data.protoId == 3 then
+            elseif data.protoId == protos.REMOVE_LINES then
                 -- 增加行数
                 if data.playerId == self.playerId then
-                    self.tetris:addServerFrame(self.frameNum, data)
-                else
                     self.targetTetris:addServerFrame(self.frameNum, data)
+                else
+                    self.tetris:addServerFrame(self.frameNum, data)
                 end
             end
         end
@@ -202,7 +202,7 @@ function TetrisMultiPanel:roundStart(oldNextBlock, newNextBlock)
 
     -- 解除长按状态
     if self.tetris.btnDownLowLongPress then
-        cmgr:send(actions.addInputFight, nil, self.tetris:getLocalFrameNum(), 52)
+        cmgr:send(actions.doUpdate, nil, protos.KEY_PRESS, self.tetris:getLocalFrameNum(), 52)
     end
 
     -- 按钮状态重置
@@ -221,7 +221,7 @@ function TetrisMultiPanel:updateScore(removeLineNums)
     self.scoreText:setString(self.removeLineNums * 10)
 
     -- 通知服务器
-    cmgr:send(actions.updateRemoveLines, nil, self.tetris:getLocalFrameNum(), removeLineNums)
+    cmgr:send(actions.doUpdate, nil, protos.REMOVE_LINES, self.tetris:getLocalFrameNum(), removeLineNums)
 end
 
 --------------------------------

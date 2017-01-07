@@ -24,11 +24,17 @@ actions.joinFight = Action.new("fight@join", "")
 actions.cancelFight = Action.new("fight@cancel", "")
 actions.quitFight = Action.new("fight@quit", "")
 actions.readyFight = Action.new("fight@ready", "")
-actions.addInputFight = Action.new("fight@addInput", "frameNum=%s&keyCode=%s")
-actions.updateRemoveLines = Action.new("fight@updateRemoveLines", "frameNum=%s&num=%s")
+actions.doUpdate = Action.new("fight@doUpdate", "protoId=%s&frameNum=%s&args=%s")
 actions.writeLog = Action.new("log", "msg=%s")
 
 actions.PUSH_FIGHT = "push@fight"
+
+-- 战斗protos
+cc.exports.protos = {}
+
+protos.FIGHT_START = 1
+protos.KEY_PRESS = 100
+protos.REMOVE_LINES = 101
 
 
 
